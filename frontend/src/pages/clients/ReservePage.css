@@ -1,217 +1,338 @@
-/* ===========================
-   PAGE
-=========================== */
+/* ================= PAGE ================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+body{
+
+    background:#f5f7fb;
+
+    font-family:Arial, Helvetica, sans-serif;
+
+}
+
+
+
+/* ================= RESERVE PAGE ================= */
+
 
 .reserve-page{
-    max-width:950px;
-    margin:40px auto;
-    padding:25px;
-    background:#f5f8fc;
+
+    width:100%;
+
     min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:30px;
+
 }
 
-/* ===========================
-   CARD
-=========================== */
+
+
+/* ================= CARD ================= */
+
 
 .reserve-card{
-    background:#fff;
+
+    width:100%;
+
+    max-width:900px;
+
+    background:white;
+
     border-radius:18px;
+
     overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+    display:flex;
+
+    flex-direction:column;
+
 }
 
-/* ===========================
-   IMAGE
-=========================== */
+
+
+/* ================= IMAGE ================= */
+
 
 .reserve-image{
+
     width:100%;
-    height:380px;
+
+    height:350px;
+
     object-fit:cover;
-    display:block;
+
 }
 
-/* ===========================
-   CONTENT
-=========================== */
+
+
+/* ================= CONTENT ================= */
+
 
 .reserve-content{
+
     padding:30px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
 }
+
+
 
 .reserve-title{
-    margin:0 0 10px;
-    font-size:34px;
-    color:#1d3557;
+
+    font-size:32px;
+
+    color:#2563eb;
+
     font-weight:700;
+
 }
+
+
 
 .reserve-location{
-    color:#666;
+
     font-size:16px;
-    margin-bottom:20px;
+
+    color:#555;
+
 }
+
+
 
 .reserve-description{
-    line-height:1.8;
-    color:#555;
-    font-size:16px;
-    margin-bottom:25px;
+
+    color:#666;
+
+    font-size:15px;
+
+    line-height:1.6;
+
 }
 
-/* ===========================
-   PRICE
-=========================== */
+
+
+/* ================= PRICE ================= */
+
 
 .reserve-price{
-    display:inline-block;
-    background:#e8fff3;
-    color:#00a86b;
-    padding:12px 18px;
-    border-radius:12px;
-    font-size:24px;
-    font-weight:700;
-    margin-bottom:30px;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:#16a34a;
+
+    margin-top:10px;
+
 }
 
-/* ===========================
-   BUTTONS
-=========================== */
 
-.reserve-btn,
-.back-btn{
-    width:100%;
+
+/* ================= AVAILABILITY BUTTON ================= */
+
+
+.availability-btn{
+
+    width:220px;
+
+    height:45px;
+
     border:none;
-    border-radius:12px;
-    padding:16px;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:bold;
+
     cursor:pointer;
-    font-size:17px;
-    font-weight:700;
+
     transition:.3s;
+
 }
 
-.reserve-btn{
-    background:#006ce4;
-    color:white;
-    margin-bottom:15px;
+
+
+.availability-btn:hover{
+
+    background:#1d4ed8;
+
 }
 
-.reserve-btn:hover{
-    background:#0055c9;
-    transform:translateY(-2px);
-}
 
-.back-btn{
-    background:#5b5b5b;
-    color:white;
-}
 
-.back-btn:hover{
-    background:#444;
-}
+/* ================= CONTACT ================= */
 
-/* ===========================
-   CONTACT
-=========================== */
 
 .contact-box{
-    margin:35px 0;
-    background:#f8fbff;
-    border:1px solid #dce8f5;
-    border-radius:16px;
-    padding:25px;
+
+    margin-top:20px;
+
+    padding:20px;
+
+    background:#f8fafc;
+
+    border-radius:12px;
+
+    border:1px solid #e5e7eb;
+
 }
 
-.contact-title{
-    margin-top:0;
-    color:#006ce4;
-    font-size:24px;
-    margin-bottom:20px;
-}
+
 
 .contact-item{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin:14px 0;
-    font-size:16px;
+
+    margin-bottom:12px;
+
+    font-size:15px;
+
     color:#444;
+
 }
+
+
 
 .contact-item a{
-    color:#006ce4;
+
+    color:#2563eb;
+
     text-decoration:none;
-    font-weight:600;
+
+    margin-left:5px;
+
 }
+
+
 
 .contact-item a:hover{
+
     text-decoration:underline;
+
 }
 
-/* ===========================
-   ICON
-=========================== */
 
-.icon{
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#006ce4;
+
+/* ================= BACK BUTTON ================= */
+
+
+.back-btn{
+
+    width:150px;
+
+    height:40px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#64748b;
+
     color:white;
-    font-size:16px;
-    flex-shrink:0;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    margin-top:15px;
+
 }
 
-/* ===========================
-   LOADING
-=========================== */
 
-.loading{
-    text-align:center;
-    font-size:24px;
-    padding:80px;
-    color:#006ce4;
+
+.back-btn:hover{
+
+    background:#475569;
+
 }
 
-/* ===========================
-   ERROR
-=========================== */
 
-.error{
-    text-align:center;
+
+/* ================= ERROR ================= */
+
+
+.error-message{
+
     color:red;
-    font-size:20px;
-    padding:80px;
+
+    text-align:center;
+
+    font-size:18px;
+
+    margin-top:50px;
+
 }
 
-/* ===========================
-   RESPONSIVE
-=========================== */
 
-@media(max-width:768px){
+
+
+
+/* ================= RESPONSIVE ================= */
+
+
+@media(max-width:700px){
+
 
     .reserve-page{
+
         padding:15px;
+
     }
+
+
 
     .reserve-image{
-        height:240px;
+
+        height:220px;
+
     }
+
+
 
     .reserve-content{
+
         padding:20px;
+
     }
+
+
 
     .reserve-title{
-        font-size:28px;
+
+        font-size:24px;
+
     }
 
-    .reserve-price{
-        font-size:20px;
+
+
+    .availability-btn{
+
+        width:100%;
+
     }
+
 
 }

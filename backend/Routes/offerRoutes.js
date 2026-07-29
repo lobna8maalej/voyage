@@ -11,23 +11,28 @@ import {
   getOfferById
 } from "../controllers/offercontroller.js";
 
-import { authMiddleware } from "../middlewares/authmiddleware.js";
-import { upload } from "../middlewares/upload.js"; 
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { upload } from "../middlewares/upload.js";
 
 const router = express.Router();
 
-// ================= ROUTES =================
-
+// ================= CREATE =================
 router.post("/", authMiddleware, createOffer);
 
-router.get("/", authMiddleware, getOffers);
+// ================= GET =================
 
+// Public
+router.get("/", getOffers);
+
+// Public
+router.get("/:id", getOfferById);
+
+// Protected
 router.get("/booking/:bookingId", authMiddleware, getOffersByBooking);
 
-router.patch("/:id/accept", authMiddleware, acceptOffer);
-router.get("/:id", authMiddleware, getOfferById);
-router.patch("/:id/reject", authMiddleware, rejectOffer);
-router.put("/:id", updateOffer);
+// ================= UPDATE =================
+router.put("/:id", authMiddleware, updateOffer);
+
 router.put(
   "/:id/images",
   authMiddleware,
@@ -35,4 +40,9 @@ router.put(
   updateOfferImages
 );
 
-export default router; 
+// ================= ACTIONS =================
+router.patch("/:id/accept", authMiddleware, acceptOffer);
+
+router.patch("/:id/reject", authMiddleware, rejectOffer);
+
+export default router;

@@ -7,6 +7,6 @@ router.post("/register", register);
 router.post("/login", login);
 
 
-router.put("/users/:id", updateUser);
+router.put("/:id", updateUser);
 
 export default router;

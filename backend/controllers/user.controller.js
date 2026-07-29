@@ -2,11 +2,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-
-// =======================
-// REGISTER
-// =======================
-
 export const register = async (req, res) => {
 
   try {
@@ -28,17 +23,10 @@ export const register = async (req, res) => {
     }
 
 
-
-    // Hash password
-
     const hashedPassword = await bcrypt.hash(
       req.body.password,
       10
     );
-
-
-
-    // Création utilisateur
 
     const user = await User.create({
 
@@ -51,12 +39,6 @@ export const register = async (req, res) => {
       role: "user"
 
     });
-
-
-
-
-
-    // Création token
 
     const token = jwt.sign(
 
@@ -73,11 +55,6 @@ export const register = async (req, res) => {
       }
 
     );
-
-
-
-
-
     res.status(201).json({
 
       user:{
@@ -111,15 +88,6 @@ export const register = async (req, res) => {
   }
 
 };
-
-
-
-
-
-
-// =======================
-// LOGIN
-// =======================
 
 export const login = async (req,res)=>{
 
@@ -172,12 +140,6 @@ export const login = async (req,res)=>{
 
 
     }
-
-
-
-
-
-
     const token = jwt.sign(
 
       {
@@ -199,12 +161,6 @@ export const login = async (req,res)=>{
       }
 
     );
-
-
-
-
-
-
 
     res.json({
 
@@ -245,33 +201,37 @@ export const login = async (req,res)=>{
 
 };
 
-
-
-
-
-
-
-// =======================
-// UPDATE USER
-// =======================
-
 export const updateUser = async(req,res)=>{
 
-
   try{
+
+    const updateData = {
+
+      email: req.body.email,
+
+      username: req.body.username
+
+    };
+
+
+    // Si un nouveau mot de passe est envoyé
+    if(req.body.password){
+
+      const hashedPassword = await bcrypt.hash(
+        req.body.password,
+        10
+      );
+
+      updateData.password = hashedPassword;
+
+    }
 
 
     const user = await User.findByIdAndUpdate(
 
       req.params.id,
 
-      {
-
-        email:req.body.email,
-
-        username:req.body.username
-
-      },
+      updateData,
 
       {
         new:true
@@ -280,10 +240,7 @@ export const updateUser = async(req,res)=>{
     );
 
 
-
-
     if(!user){
-
 
       return res.status(404).json({
 
@@ -291,17 +248,19 @@ export const updateUser = async(req,res)=>{
 
       });
 
-
     }
 
 
+    res.json({
 
-    res.json(user);
+      message:"User updated successfully",
 
+      user
+
+    });
 
 
   }catch(error){
-
 
     res.status(500).json({
 
@@ -309,8 +268,6 @@ export const updateUser = async(req,res)=>{
 
     });
 
-
   }
-
 
 };

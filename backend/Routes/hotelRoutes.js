@@ -17,5 +17,5 @@ router.get("/", getHotels);
 router.get("/:id", getHotel);
 router.put("/:id", authMiddleware, updateHotel);
 router.delete("/:id", authMiddleware, deleteHotel);
-router.get("/:id", getHotelById);
+
 export default router;

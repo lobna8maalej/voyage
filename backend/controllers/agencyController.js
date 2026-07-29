@@ -46,51 +46,80 @@ export const createAgency = async (req, res) => {
 
 export const updateAgency = async (req, res) => {
   try {
+
     const updateData = {};
 
-    const { name, email, phone, city, country, description, image } = req.body;
+    const { 
+      name, 
+      email, 
+      phone, 
+      city, 
+      country, 
+      description, 
+      image,
+      price
+    } = req.body;
+
 
     if (name) updateData.name = name;
+
     if (email) updateData.email = email;
+
     if (phone) updateData.phone = phone;
+
     if (city) updateData.city = city;
+
     if (country) updateData.country = country;
+
     if (description) updateData.description = description;
+
+
+    if (price !== undefined) {
+      updateData.price = Number(price);
+    }
+
 
     if (image) {
       updateData.image = image;
     }
 
+
     if (req.body.images && Array.isArray(req.body.images)) {
       updateData.images = req.body.images;
     }
 
+
+
     const agency = await Agency.findByIdAndUpdate(
       req.params.id,
       updateData,
-      { new: true }
+      { new:true }
     );
+
 
     if (!agency) {
       return res.status(404).json({
-        success: false,
-        message: "Agency not found",
+        success:false,
+        message:"Agency not found"
       });
     }
 
+
     return res.json({
-      success: true,
-      data: agency,
+      success:true,
+      data:agency
     });
 
-  } catch (error) {
+
+  } catch(error){
+
     return res.status(500).json({
-      success: false,
-      message: error.message,
+      success:false,
+      message:error.message
     });
+
   }
 };
-
 export const getAgencies = async (req, res) => {
   try {
     const agencies = await Agency.find()

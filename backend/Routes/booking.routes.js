@@ -7,21 +7,23 @@ import {
   checkInBooking
 } from "../controllers/booking.controller.js";
 
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+
 const router = express.Router();
 
 // CREATE BOOKING
-router.post("/", createBooking);
+router.post("/", authMiddleware, createBooking);
 
-// CHECKOUT STRIPE
-router.post("/checkout", createCheckout);
+// STRIPE CHECKOUT
+router.post("/checkout", authMiddleware, createCheckout);
 
-// GET ALL
-router.get("/", getBookings);
+// GET ALL BOOKINGS
+router.get("/", authMiddleware, getBookings);
 
 // MY BOOKINGS
-router.get("/my", getMyBookings);
+router.get("/my", authMiddleware, getMyBookings);
 
 // CHECK-IN QR
-router.post("/checkin", checkInBooking);
+router.post("/checkin", authMiddleware, checkInBooking);
 
 export default router;

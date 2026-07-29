@@ -1,99 +1,217 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./ChatPage.css"
+import "./ChatPage.css";
+
 const api = axios.create({
   baseURL: "http://localhost:5000/api",
 });
 
+
 export default function ChatPage() {
+
+
   const [messages, setMessages] = useState<any[]>([]);
+
   const [text, setText] = useState("");
 
+
+
   const sendMessage = async () => {
+
     if (!text.trim()) return;
 
+
     try {
+
+
+      const userMessage = text;
+
+
       const res = await api.post("/chat", {
-        message: text,
+
+        message: userMessage,
+
       });
 
+
+
       setMessages((prev) => [
+
         ...prev,
-        { role: "user", text },
-        { role: "bot", text: res.data.reply },
+
+        {
+          role:"user",
+          text:userMessage
+        },
+
+
+        {
+          role:"bot",
+          text:
+          res.data.response ||
+          "Pas de réponse disponible"
+        }
+
+
       ]);
 
+
+
       setText("");
+
+
+
     } catch (err) {
-      console.error(err);
+
+
+      console.error(
+        "Erreur chatbot :",
+        err
+      );
+
+
+      setMessages((prev)=>[
+
+        ...prev,
+
+        {
+          role:"bot",
+          text:"❌ Erreur serveur, veuillez réessayer."
+        }
+
+      ]);
+
     }
+
   };
 
+
+
   return (
-  <div className="chat-page">
 
-    <div className="chat-container">
+    <div className="chat-page">
 
-      <div className="chat-header">
+
+      <div className="chat-container">
+
+
+        <div className="chat-header">
+
           Tunisia Booking AI Assistant
-      </div>
+
+        </div>
 
 
-      <div className="chat-messages">
 
-        {messages.length === 0 && (
-          <p className="welcome">
-            👋 Bonjour ! Je peux vous aider à trouver un hôtel,
-            restaurant, circuit ou destination.
-          </p>
-        )}
+        <div className="chat-messages">
 
 
-        {messages.map((m, i) => (
+          {
+          messages.length === 0 && (
 
-          <div
-            key={i}
-            className={
-              m.role === "user"
-              ?
-              "message user-message"
-              :
-              "message bot-message"
+            <p className="welcome">
+
+              👋 Bonjour ! Je peux vous aider à trouver
+              un hôtel, restaurant, circuit ou destination.
+
+            </p>
+
+          )
+          }
+
+
+
+          {
+          messages.map((m,i)=>(
+
+
+            <div
+
+              key={i}
+
+              className={
+                m.role === "user"
+                ?
+                "message user-message"
+                :
+                "message bot-message"
+              }
+
+            >
+
+
+              <strong>
+
+                {
+                  m.role === "user"
+                  ?
+                  "Vous"
+                  :
+                  "AI"
+                }
+
+              </strong>
+
+
+
+              <span>
+
+                {m.text}
+
+              </span>
+
+
+
+            </div>
+
+
+          ))
+          }
+
+
+
+        </div>
+
+
+
+
+        <div className="chat-input-area">
+
+
+          <input
+
+            value={text}
+
+            onChange={(e)=>
+              setText(e.target.value)
             }
-          >
 
-            <strong>
-              {m.role === "user" ? "Vous" : "AI"}
-            </strong>
+            placeholder="Écrire votre message..."
 
-            <span>
-              {m.text}
-            </span>
+            onKeyDown={(e)=>{
 
-          </div>
+              if(e.key==="Enter"){
 
-        ))}
+                sendMessage();
 
-      </div>
+              }
 
+            }}
+
+          />
 
 
-      <div className="chat-input-area">
 
-        <input
-          value={text}
-          onChange={(e)=>setText(e.target.value)}
-          placeholder="Écrire votre message..."
-          onKeyDown={(e)=>{
-            if(e.key==="Enter")
-              sendMessage();
-          }}
-        />
+          <button onClick={sendMessage}>
+
+            Envoyer 🚀
+
+          </button>
 
 
-        <button onClick={sendMessage}>
-          Envoyer 🚀
-        </button>
+
+        </div>
+
 
 
       </div>
@@ -101,6 +219,6 @@ export default function ChatPage() {
 
     </div>
 
-  </div>
-)
+  );
+
 }
