@@ -694,10 +694,17 @@ return (
     </div>
 
     {phone && (
-      <div className="contact-item">
-        📱 <a href={`tel:${phone}`}>{phone}</a>
-      </div>
-    )}
+  <div className="contact-item">
+    💬{" "}
+    <a
+      href={`https://wa.me/${phone.replace(/\D/g, "")}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {phone}
+    </a>
+  </div>
+)}
 
     {email && (
       <div className="contact-item">

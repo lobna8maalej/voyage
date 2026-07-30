@@ -65,3 +65,33 @@ text-align:center;
 color:#9ca3af;
 
 }
+
+.footer-section a {
+  display: block;
+  color: #d1d5db;
+  text-decoration: none;
+  margin: 8px 0;
+  cursor: pointer;
+}
+
+.footer-section a:hover {
+  color: #38bdf8;
+}
+
+.footer-support {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-support a {
+  display: inline;
+  color: #d1d5db;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.footer-support a:hover {
+  color: #38bdf8;
+  text-decoration: underline;
+}
