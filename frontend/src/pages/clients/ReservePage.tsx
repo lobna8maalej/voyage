@@ -313,45 +313,42 @@ return (
 
         {/* ================= RESTAURANT ================= */}
 
-        {type === "restaurant" && (
-          <>
-            {service.cuisine && (
-              <div className="info-item">
-                🍽 <strong>Cuisine :</strong> {service.cuisine}
-              </div>
-            )}
+       {type === "restaurant" && (
+  <>
+    {service.cuisine ? (
+      <div className="info-item">
+        🍽 <strong>Cuisine :</strong> {service.cuisine}
+      </div>
+    ) : null}
 
-            {service.priceRange && (
-              <div className="info-item">
-                💰 <strong>Fourchette :</strong>{" "}
-                {service.priceRange}
-              </div>
-            )}
+    {service.priceRange && service.priceRange !== "0" ? (
+      <div className="info-item">
+        💰 <strong>Fourchette :</strong> {service.priceRange}
+      </div>
+    ) : null}
 
-            {openingHours && (
-              <div className="info-item">
-                🕒 <strong>Horaires :</strong>{" "}
-                {openingHours}
-              </div>
-            )}
+    {openingHours ? (
+      <div className="info-item">
+        🕒 <strong>Horaires :</strong> {openingHours}
+      </div>
+    ) : null}
 
-            {service.rating && (
-              <div className="info-item">
-                ⭐ <strong>Note :</strong>{" "}
-                {service.rating}/5
-              </div>
-            )}
+    {service.rating && Number(service.rating) > 0 ? (
+      <div className="info-item">
+        ⭐ <strong>Note :</strong> {service.rating}/5
+      </div>
+    ) : null}
 
-            <button
-              className="availability-btn"
-              onClick={() =>
-                navigate(`/availability/${type}/${id}`)
-              }
-            >
-              🍴 Réserver une table
-            </button>
-          </>
-        )}
+    <button
+      className="availability-btn"
+      onClick={() =>
+        navigate(`/availability/${type}/${id}`)
+      }
+    >
+      🍴 Réserver une table
+    </button>
+  </>
+)}
 
         {/* ================= SPA ================= */}
 
@@ -397,47 +394,43 @@ return (
 
                 {/* ================= DESTINATION ================= */}
 
-        {type === "destination" && (
-          <>
-            {service.country && (
-              <div className="info-item">
-                🌍 <strong>Pays :</strong>{" "}
-                {service.country}
-              </div>
-            )}
+      {type === "destination" && (
+  <>
+    {service.country ? (
+      <div className="info-item">
+        🌍 <strong>Pays :</strong> {service.country}
+      </div>
+    ) : null}
 
-            {service.bestSeason && (
-              <div className="info-item">
-                ☀ <strong>Meilleure saison :</strong>{" "}
-                {service.bestSeason}
-              </div>
-            )}
+    {service.bestSeason ? (
+      <div className="info-item">
+        ☀ <strong>Meilleure saison :</strong> {service.bestSeason}
+      </div>
+    ) : null}
 
-            {service.rating && (
-              <div className="info-item">
-                ⭐ <strong>Note :</strong>{" "}
-                {service.rating}/5
-              </div>
-            )}
+    {service.rating && Number(service.rating) > 0 ? (
+      <div className="info-item">
+        ⭐ <strong>Note :</strong> {service.rating}/5
+      </div>
+    ) : null}
 
-            {activities.length > 0 && (
-              <div className="info-item">
-                🎯 <strong>Activités :</strong>{" "}
-                {activities.join(" • ")}
-              </div>
-            )}
+    {Array.isArray(service.activities) && service.activities.length > 0 ? (
+      <div className="info-item">
+        🎯 <strong>Activités :</strong>{" "}
+        {service.activities.join(" • ")}
+      </div>
+    ) : null}
 
-            <button
-              className="availability-btn"
-              onClick={() =>
-                navigate(`/availability/${type}/${id}`)
-              }
-            >
-              👁 Voir disponibilité
-            </button>
-          </>
-        )}
-
+    <button
+      className="availability-btn"
+      onClick={() =>
+        navigate(`/availability/${type}/${id}`)
+      }
+    >
+      👁 Voir disponibilité
+    </button>
+  </>
+)}
 
         {type === "offer" && (
           <>
@@ -643,43 +636,39 @@ return (
         {/* ================= AGENCY ================= */}
 
 
-        {type === "agency" && (
-          <>
-            {service.license && (
-              <div className="info-item">
-                ✔ <strong>Licence :</strong>{" "}
-                {service.license}
-              </div>
-            )}
+       {type === "agency" && (
+  <>
+    {service.license ? (
+      <div className="info-item">
+        ✔ <strong>Licence :</strong>{" "}
+        {service.license}
+      </div>
+    ) : null}
 
+    {service.yearsExperience && Number(service.yearsExperience) > 0 ? (
+      <div className="info-item">
+        📅 <strong>Expérience :</strong>{" "}
+        {service.yearsExperience} ans
+      </div>
+    ) : null}
 
-            {service.yearsExperience && (
-              <div className="info-item">
-                📅 <strong>Expérience :</strong>{" "}
-                {service.yearsExperience} ans
-              </div>
-            )}
+    {service.rating && Number(service.rating) > 0 ? (
+      <div className="info-item">
+        ⭐ <strong>Note :</strong>{" "}
+        {service.rating}/5
+      </div>
+    ) : null}
 
-
-            {service.rating && (
-              <div className="info-item">
-                ⭐ <strong>Note :</strong>{" "}
-                {service.rating}/5
-              </div>
-            )}
-
-
-            <button
-              className="availability-btn"
-              onClick={() =>
-                navigate(`/availability/${type}/${id}`)
-              }
-            >
-              ✈ Contacter l'agence
-            </button>
-
-          </>
-        )}
+    <button
+      className="availability-btn"
+      onClick={() =>
+        navigate(`/availability/${type}/${id}`)
+      }
+    >
+      ✈ Contacter l'agence
+    </button>
+  </>
+)}
 
 
 

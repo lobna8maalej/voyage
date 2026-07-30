@@ -834,22 +834,7 @@ item.price && item.price > 0
 
 
 </p>
-
-
-
-
-
-
-
-
-
 <div className="travel-buttons">
-
-
-
-
-
-
 <button
 
 className="reserve-btn"
@@ -869,13 +854,6 @@ navigate(
 Réserver
 
 </button>
-
-
-
-
-
-
-
 
 {
 
@@ -919,23 +897,8 @@ type
 
 
 }
-
-
-
-
 </div>
-
-
-
-
-
-
 </div>
-
-
-
-
-
 </div>
 
 );
