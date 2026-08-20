@@ -3,20 +3,34 @@ import express from "express";
 import {
   createCoupon,
   getCoupons,
+  getCouponById,
   validateCoupon,
   updateCoupon,
   deleteCoupon,
-  getCouponById
+  useCoupon,
 } from "../controllers/coupon.controller.js";
 
-import { authMiddleware } from "../middlewares/authmiddleware.js";
-
 const router = express.Router();
-router.post("/", authMiddleware, createCoupon);
-router.get("/",  getCoupons);
+
+// CREATE
+router.post("/", createCoupon);
+
+// GET ALL
+router.get("/", getCoupons);
+
+// VALIDATE
+router.post("/validate", validateCoupon);
+
+// USE / COPY
+router.post("/:id/use", useCoupon);
+
+// GET BY ID
 router.get("/:id", getCouponById);
 
-router.post("/validate", validateCoupon);
-router.put("/:id", authMiddleware, updateCoupon);
-router.delete("/:id", authMiddleware, deleteCoupon);
+// UPDATE
+router.put("/:id", updateCoupon);
+
+// DELETE
+router.delete("/:id", deleteCoupon);
+
 export default router;

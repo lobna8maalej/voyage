@@ -3,11 +3,36 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../admin/axios";
 import "./ReservePage.css";
 
+/* =====================================================
+   TYPES
+===================================================== */
+
+type Destination = {
+  name?: string;
+  city?: string;
+  country?: string;
+  description?: string;
+};
+
+type Agency = {
+  name?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  website?: string;
+  openingHours?: string;
+};
+
 type Item = {
   _id: string;
 
+  /* ============================
+     GENERAL
+  ============================ */
+
   name?: string;
   title?: string;
+
   description?: string;
   summary?: string;
 
@@ -18,11 +43,19 @@ type Item = {
   country?: string;
   location?: string;
 
+  /* ============================
+     IMAGES
+  ============================ */
+
   image?: string;
   imageUrl?: string;
   images?: string[];
   photo?: string;
   cover?: string;
+
+  /* ============================
+     CONTACT
+  ============================ */
 
   phone?: string;
   email?: string;
@@ -30,717 +63,1492 @@ type Item = {
   website?: string;
   openingHours?: string;
 
-  code?: string;
-  coupon?: string;
-  expiryDate?: string;
-  validUntil?: string;
-
-  destination?:
-    | string
-    | {
-        name?: string;
-        city?: string;
-        country?: string;
-        description?: string;
-      };
+  /* ============================
+     ARRAYS
+  ============================ */
 
   programs?: string[];
   includes?: string[];
   activities?: string[];
   services?: string[];
 
-  stars?: number;
-  rating?: number;
-  duration?: string;
-  cuisine?: string;
-  priceRange?: string;
-  bestSeason?: string;
+  /* ============================
+     HOTEL
+  ============================ */
 
+  stars?: number;
   wifi?: boolean;
   pool?: boolean;
   parking?: boolean;
   breakfast?: boolean;
   airConditioning?: boolean;
 
+  /* ============================
+     RESTAURANT
+  ============================ */
+
+  cuisine?: string;
+  rating?: number;
+  priceRange?: string;
+
+  /* ============================
+     SPA
+  ============================ */
+
+  duration?: string;
+
+  /* ============================
+     AGENCY
+  ============================ */
+
   license?: string;
   yearsExperience?: number;
 
-  agency?: {
-    name?: string;
-    phone?: string;
-    email?: string;
-    address?: string;
-    website?: string;
-    openingHours?: string;
-  };
+  /* ============================
+     DESTINATION
+  ============================ */
+
+  destination?: string | Destination;
+  bestSeason?: string;
+
+  /* ============================
+     OFFER
+  ============================ */
+
+  validUntil?: string;
+
+  /* ============================
+     COUPON
+  ============================ */
+
+  code?: string;
+  coupon?: string;
+
+  /*
+    Backend :
+    expireDate
+  */
+  expireDate?: string;
+
+  /*
+    Ancien nom éventuellement
+    conservé pour compatibilité
+  */
+  expiryDate?: string;
+
+  /* ============================
+     COUPON STATUT
+  ============================ */
+
+  active?: boolean;
+
+  /* ============================
+     AGENCY OBJECT
+  ============================ */
+
+  agency?: Agency;
 };
+
+/* =====================================================
+   FALLBACK IMAGE
+===================================================== */
 
 const FALLBACK =
   "https://res.cloudinary.com/dgdemj83g/image/upload/v1782842430/The-Voyage-With-Water-Tower-from-Drone_javckd.webp";
+
+/* =====================================================
+   COMPONENT
+===================================================== */
 
 export default function ReservePage() {
   const { type, id } = useParams();
   const navigate = useNavigate();
 
+  /* =====================================================
+     STATES
+  ===================================================== */
+
   const [service, setService] = useState<Item | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState("");
+
+  /* =====================================================
+     NORMALIZED TYPE
+  ===================================================== */
+
+  const normalizedType = type?.toLowerCase() || "";
+
+  /* =====================================================
+     API MAP
+  ===================================================== */
 
   const map: Record<string, string> = {
     hotel: "/hotels",
-    agency: "/agency",
-    circuit: "/circuits",
+    hotels: "/hotels",
+
     restaurant: "/restaurants",
+    restaurants: "/restaurants",
+
     spa: "/spa",
+
+    circuit: "/circuits",
+    circuits: "/circuits",
+
+    agency: "/agency",
+    agencies: "/agency",
+
     destination: "/destinations",
+    destinations: "/destinations",
+
     offer: "/offers",
+    offers: "/offers",
+
     coupon: "/coupons",
+    coupons: "/coupons",
   };
+
+  /* =====================================================
+     SERVICE TYPE
+  ===================================================== */
+
+  const getServiceType = (): string => {
+    switch (normalizedType) {
+      case "hotel":
+      case "hotels":
+        return "Hôtel";
+
+      case "restaurant":
+      case "restaurants":
+        return "Restaurant";
+
+      case "spa":
+        return "Spa";
+
+      case "circuit":
+      case "circuits":
+        return "Circuit";
+
+      case "agency":
+      case "agencies":
+        return "Agence";
+
+      case "destination":
+      case "destinations":
+        return "Destination";
+
+      case "offer":
+      case "offers":
+        return "Offre";
+
+      case "coupon":
+      case "coupons":
+        return "Coupon";
+
+      default:
+        return "Service";
+    }
+  };
+
+  /* =====================================================
+     LOAD SERVICE
+  ===================================================== */
 
   useEffect(() => {
     const fetchService = async () => {
       try {
-        const endpoint = map[type?.toLowerCase() || ""];
+        setLoading(true);
+        setError("");
 
-        if (!endpoint) {
-          setError("Type de service invalide");
+        const endpoint = map[normalizedType];
+
+        /* ============================
+           VALIDATION
+        ============================ */
+
+        if (!endpoint || !id) {
+          setError(
+            "Type de service ou identifiant invalide."
+          );
           return;
         }
 
-        const response = await api.get(`${endpoint}/${id}`);
+        console.log(
+          "🔎 Type :",
+          normalizedType
+        );
 
-        let data = response.data;
+        console.log(
+          "🔎 Endpoint :",
+          endpoint
+        );
 
-        if (response.data.hotel) data = response.data.hotel;
-        else if (response.data.agency) data = response.data.agency;
-        else if (response.data.circuit) data = response.data.circuit;
-        else if (response.data.restaurant) data = response.data.restaurant;
-        else if (response.data.spa) data = response.data.spa;
-        else if (response.data.destination) data = response.data.destination;
-        else if (response.data.offer) data = response.data.offer;
-        else if (response.data.coupon) data = response.data.coupon;
-        else if (response.data.data) data = response.data.data;
+        console.log(
+          "🔎 ID :",
+          id
+        );
 
-        console.log("SERVICE :", data);
+        /* ============================
+           API REQUEST
+        ============================ */
+
+        const response = await api.get(
+          `${endpoint}/${id}`
+        );
+
+        console.log(
+          "📥 RÉPONSE API :",
+          response.data
+        );
+
+        let data: Item = response.data;
+
+        /* ============================
+           NORMALISATION API
+        ============================ */
+
+        if (response.data?.hotel) {
+          data = response.data.hotel;
+
+        } else if (response.data?.restaurant) {
+          data = response.data.restaurant;
+
+        } else if (response.data?.spa) {
+          data = response.data.spa;
+
+        } else if (response.data?.circuit) {
+          data = response.data.circuit;
+
+        } else if (response.data?.agency) {
+          data = response.data.agency;
+
+        } else if (response.data?.destination) {
+          data = response.data.destination;
+
+        } else if (response.data?.offer) {
+          data = response.data.offer;
+
+        } else if (response.data?.coupon) {
+          data = response.data.coupon;
+
+        } else if (response.data?.data) {
+          data = response.data.data;
+        }
+
+        console.log(
+          "📦 SERVICE FINAL :",
+          data
+        );
 
         setService(data);
-      } catch (err) {
-        console.error(err);
-        setError("Service introuvable");
+
+      } catch (err: any) {
+        console.error(
+          "❌ ERREUR SERVICE :",
+          err.response?.data || err.message
+        );
+
+        setError(
+          err.response?.data?.message ||
+            "Impossible de récupérer le service."
+        );
+
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (type && id) {
+    if (normalizedType && id) {
       fetchService();
     }
-  }, [type, id]);
+  }, [normalizedType, id]);
 
-  if (error) {
-    return <p>{error}</p>;
+  /* =====================================================
+     LOADING
+  ===================================================== */
+
+  if (loading) {
+    return (
+      <div className="reserve-page">
+
+        <div className="reserve-card loading-card">
+
+          <div className="loading-spinner"></div>
+
+          <p>
+            Chargement...
+          </p>
+
+        </div>
+
+      </div>
+    );
   }
 
-  if (!service) {
-    return <p>Chargement...</p>;
+  /* =====================================================
+     ERROR
+  ===================================================== */
+
+  if (error || !service) {
+    return (
+      <div className="reserve-page">
+
+        <div className="reserve-card error-card">
+
+          <p className="error-message">
+            {error || "Élément introuvable."}
+          </p>
+
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="back-button"
+          >
+            ← Retour
+          </button>
+
+        </div>
+
+      </div>
+    );
   }
 
-  /* ================= VARIABLES ================= */
+  /* =====================================================
+     IMAGE
+  ===================================================== */
 
-const image =
-  service.images?.[0] ||
-  service.image ||
-  service.imageUrl ||
-  service.photo ||
-  service.cover ||
-  FALLBACK;
+  const image =
+    service.images?.find(
+      (img) =>
+        typeof img === "string" &&
+        img.trim() !== ""
+    ) ||
+    service.image ||
+    service.imageUrl ||
+    service.photo ||
+    service.cover ||
+    FALLBACK;
 
-const title =
-  service.name ||
-  service.title ||
-  service.agency?.name ||
-  "Service";
+  /* =====================================================
+     TITLE
+  ===================================================== */
 
+  const destinationObject =
+    typeof service.destination === "object"
+      ? service.destination
+      : undefined;
 
-const destination =
-  typeof service.destination === "string"
-    ? service.destination
-    : service.destination?.name ||
-      service.destination?.city ||
-      service.destination?.country ||
-      service.city ||
-      service.country ||
-      service.location ||
-      "";
+  const title =
+    service.name ||
+    service.title ||
+    destinationObject?.name ||
+    service.agency?.name ||
+    "Service";
 
+  /* =====================================================
+     LOCATION
+     
+     IMPORTANT :
+     Cette variable n'est plus affichée
+     sous le titre afin d'éviter la répétition.
+  ===================================================== */
 
-// CONTACT AGENCE
-const phone =
-  service.phone ||
-  service.agency?.phone ||
-  "+216 71 563 022";
+  const destinationName =
+    typeof service.destination === "string"
+      ? service.destination
+      : destinationObject?.name || "";
 
+  /* =====================================================
+     DESCRIPTION
+  ===================================================== */
 
-const email =
-  service.email ||
-  service.agency?.email ||
-  "contact@darelmedina.com";
+  const description =
+    service.description ||
+    destinationObject?.description ||
+    service.summary ||
+    service.programs?.join(" • ") ||
+    "Description prochainement disponible.";
 
+  /* =====================================================
+     CONTACT
+  ===================================================== */
 
-const address =
-  service.address ||
-  service.agency?.address ||
-  "Rue Sidi Ben Arous, Tunis";
+  const servicesWithContact = [
+    "hotel",
+    "hotels",
+    "restaurant",
+    "restaurants",
+    "spa",
+    "circuit",
+    "circuits",
+    "agency",
+    "agencies",
+  ];
 
+  const showContact =
+    servicesWithContact.includes(
+      normalizedType
+    );
 
-const openingHours =
-  service.openingHours ||
-  service.agency?.openingHours ||
-  "";
+  const phone =
+    service.phone ||
+    service.agency?.phone ||
+    "";
 
+  const email =
+    service.email ||
+    service.agency?.email ||
+    "";
 
-const website =
-  service.website ||
-  service.agency?.website ||
-  "https://darelmedinatunis.com";
+  const address =
+    service.address ||
+    service.agency?.address ||
+    "";
 
+  const website =
+    service.website ||
+    service.agency?.website ||
+    "";
 
-const websiteUrl = website
-  ? website.startsWith("http")
-    ? website
-    : `https://${website}`
-  : null;
+  const websiteUrl = website
+    ? website.startsWith("http")
+      ? website
+      : `https://${website}`
+    : "";
 
+  const openingHours =
+    service.openingHours ||
+    service.agency?.openingHours ||
+    "";
 
+  /* =====================================================
+     WHATSAPP
+  ===================================================== */
 
-const services = service.services ?? [];
-const activities = service.activities ?? [];
-const includes = service.includes ?? [];
-/* ================= RETURN ================= */
+  const whatsappNumber = phone.replace(
+    /\D/g,
+    ""
+  );
 
-return (
-  <div className="reserve-page">
-    <div className="reserve-card">
+  const whatsappUrl = whatsappNumber
+    ? `https://wa.me/${whatsappNumber}`
+    : "";
 
-      <img
-        className="reserve-image"
-        src={image}
-        alt={title}
-        onError={(e) => {
-          e.currentTarget.src = FALLBACK;
-        }}
-      />
+  /* =====================================================
+     ARRAYS
+  ===================================================== */
 
-      <div className="reserve-content">
+  const services = service.services ?? [];
 
-        <h1 className="reserve-title">
-          {title}
-        </h1>
+  const includes = service.includes ?? [];
 
-        <p className="reserve-location">
-          📍 {destination}
-        </p>
+  const activities = service.activities ?? [];
 
-        <p className="reserve-description">
-          {service.description ||
-            (typeof service.destination === "object"
-              ? service.destination?.description
-              : "") ||
-            service.summary ||
-            service.programs?.join(" • ") ||
-            "Description prochainement disponible."}
-        </p>
+  /* =====================================================
+     RESERVATION
+  ===================================================== */
 
-        {service.price &&
-          !["hotel", "spa", "offer", "circuit"].includes(type || "") && (
-            <div className="reserve-price">
-              💰 {service.price} TND
+  const reservableTypes = [
+    "hotel",
+    "hotels",
+
+    "restaurant",
+    "restaurants",
+
+    "spa",
+
+    "circuit",
+    "circuits",
+
+    "agency",
+    "agencies",
+
+    "offer",
+    "offers",
+  ];
+
+  const canReserve =
+    reservableTypes.includes(
+      normalizedType
+    );
+
+  const goToAvailability = () => {
+    navigate(
+      `/availability/${normalizedType}/${id}`
+    );
+  };
+
+  /* =====================================================
+     COUPON
+  ===================================================== */
+
+  const couponCode =
+    service.code ||
+    service.coupon ||
+    "";
+
+  const couponExpireDate =
+    service.expireDate ||
+    service.expiryDate ||
+    "";
+
+  const couponId =
+    service._id;
+
+  /* =====================================================
+     COPY + USE COUPON
+  ===================================================== */
+
+  const copyCoupon = async () => {
+
+    if (!couponCode) {
+      alert(
+        "Aucun code promo disponible."
+      );
+      return;
+    }
+
+    if (!couponId) {
+      console.error(
+        "❌ ID du coupon manquant"
+      );
+
+      alert(
+        "Impossible d'enregistrer l'utilisation du coupon."
+      );
+
+      return;
+    }
+
+    try {
+
+      /* ============================
+         1. COPIER LE CODE
+      ============================ */
+
+      await navigator.clipboard.writeText(
+        couponCode
+      );
+
+      console.log(
+        "📋 Code copié :",
+        couponCode
+      );
+
+      /* ============================
+         2. ENREGISTRER L'UTILISATION
+      ============================ */
+
+      const response = await api.post(
+        `/coupons/${couponId}/use`
+      );
+
+      console.log(
+        "📊 Utilisation enregistrée :",
+        response.data
+      );
+
+      /* ============================
+         3. MESSAGE
+      ============================ */
+
+      alert(
+        "Le code promo a été copié !"
+      );
+
+    } catch (copyError: any) {
+
+      console.error(
+        "❌ Erreur copie/utilisation coupon :",
+        copyError.response?.data ||
+          copyError.message
+      );
+
+      alert(
+        copyError.response?.data?.message ||
+          "Le code a peut-être été copié, mais son utilisation n'a pas pu être enregistrée."
+      );
+    }
+  };
+
+  /* =====================================================
+     RETURN
+  ===================================================== */
+
+  return (
+    <div className="reserve-page">
+
+      <div className="reserve-card">
+
+        {/* =================================================
+            IMAGE
+        ================================================= */}
+
+        <div className="reserve-image-container">
+
+          <img
+            className="reserve-image"
+            src={image}
+            alt={title}
+            onError={(e) => {
+              e.currentTarget.src = FALLBACK;
+            }}
+          />
+
+          <div className="image-overlay">
+
+            <span className="service-badge">
+              🏷️ {getServiceType()}
+            </span>
+
+          </div>
+
+        </div>
+
+        {/* =================================================
+            CONTENT
+        ================================================= */}
+
+        <div className="reserve-content">
+
+          {/* =================================================
+              TITLE
+          ================================================= */}
+
+          <h1 className="reserve-title">
+            {title}
+          </h1>
+
+          {/* =================================================
+              DESCRIPTION
+              
+              IMPORTANT :
+              La localisation n'est plus affichée ici.
+              Elle sera affichée uniquement dans Contact.
+          ================================================= */}
+
+          <div className="description-box">
+
+            <h2>
+              📌 Présentation
+            </h2>
+
+            <p>
+              {description}
+            </p>
+
+          </div>
+
+          {/* =================================================
+              HOTEL
+          ================================================= */}
+
+          {(normalizedType === "hotel" ||
+            normalizedType === "hotels") && (
+
+            <div className="service-details">
+
+              {service.stars !== undefined &&
+                service.stars > 0 && (
+
+                <div className="info-item">
+
+                  ⭐
+
+                  <strong>
+                    Étoiles :
+                  </strong>{" "}
+
+                  {"⭐".repeat(service.stars)}
+
+                </div>
+              )}
+
+              {service.price !== undefined && (
+
+                <div className="reserve-price">
+
+                  💰 {service.price} TND / nuit
+
+                </div>
+
+              )}
+
+              {service.wifi && (
+                <div className="info-item">
+                  📶 Wi-Fi gratuit
+                </div>
+              )}
+
+              {service.pool && (
+                <div className="info-item">
+                  🏊 Piscine
+                </div>
+              )}
+
+              {service.parking && (
+                <div className="info-item">
+                  🚗 Parking
+                </div>
+              )}
+
+              {service.breakfast && (
+                <div className="info-item">
+                  ☕ Petit-déjeuner inclus
+                </div>
+              )}
+
+              {service.airConditioning && (
+                <div className="info-item">
+                  ❄️ Climatisation
+                </div>
+              )}
+
             </div>
-        )}
+          )}
 
-        {type === "hotel" && (
-          <>
-            {service.stars && (
-              <div className="info-item">
-                ⭐ <strong>Étoiles :</strong>{" "}
-                {"⭐".repeat(service.stars)}
-              </div>
-            )}
+          {/* =================================================
+              RESTAURANT
+          ================================================= */}
 
-            {service.price && (
-              <div className="reserve-price">
-                💰 {service.price} TND / nuit
-              </div>
-            )}
+          {(normalizedType === "restaurant" ||
+            normalizedType === "restaurants") && (
 
-            {service.wifi && (
-              <div className="info-item">
-                📶 Wi-Fi gratuit
-              </div>
-            )}
+            <div className="service-details">
 
-            {service.pool && (
-              <div className="info-item">
-                🏊 Piscine
-              </div>
-            )}
+              {service.cuisine && (
+                <div className="info-item">
 
-            {service.parking && (
-              <div className="info-item">
-                🚗 Parking
-              </div>
-            )}
+                  🍽️
 
-            {service.breakfast && (
-              <div className="info-item">
-                ☕ Petit-déjeuner inclus
-              </div>
-            )}
+                  <strong>
+                    Cuisine :
+                  </strong>{" "}
 
-            {service.airConditioning && (
-              <div className="info-item">
-                ❄ Climatisation
-              </div>
-            )}
+                  {service.cuisine}
 
-            <button
-              className="availability-btn"
-              onClick={() =>
-                navigate(`/availability/${type}/${id}`)
-              }
-            >
-              🏨 Réserver
-            </button>
-          </>
-        )}
+                </div>
+              )}
 
-        {/* ================= RESTAURANT ================= */}
+              {service.priceRange &&
+                service.priceRange !== "0" && (
 
-       {type === "restaurant" && (
-  <>
-    {service.cuisine ? (
-      <div className="info-item">
-        🍽 <strong>Cuisine :</strong> {service.cuisine}
-      </div>
-    ) : null}
+                <div className="info-item">
 
-    {service.priceRange && service.priceRange !== "0" ? (
-      <div className="info-item">
-        💰 <strong>Fourchette :</strong> {service.priceRange}
-      </div>
-    ) : null}
+                  💰
 
-    {openingHours ? (
-      <div className="info-item">
-        🕒 <strong>Horaires :</strong> {openingHours}
-      </div>
-    ) : null}
+                  <strong>
+                    Fourchette :
+                  </strong>{" "}
 
-    {service.rating && Number(service.rating) > 0 ? (
-      <div className="info-item">
-        ⭐ <strong>Note :</strong> {service.rating}/5
-      </div>
-    ) : null}
+                  {service.priceRange}
 
-    <button
-      className="availability-btn"
-      onClick={() =>
-        navigate(`/availability/${type}/${id}`)
-      }
-    >
-      🍴 Réserver une table
-    </button>
-  </>
-)}
+                </div>
+              )}
 
-        {/* ================= SPA ================= */}
+              {service.rating !== undefined &&
+                Number(service.rating) > 0 && (
 
-        {type === "spa" && (
-          <>
-            {service.duration && (
-              <div className="info-item">
-                ⏱ <strong>Durée :</strong>{" "}
-                {service.duration}
-              </div>
-            )}
+                <div className="info-item">
 
-            {services.length > 0 && (
-              <div className="info-item">
-                💆 <strong>Prestations :</strong>{" "}
-                {services.join(" • ")}
-              </div>
-            )}
+                  ⭐
 
-            {service.price && (
-              <div className="reserve-price">
-                💰 {service.price} TND
-              </div>
-            )}
+                  <strong>
+                    Note :
+                  </strong>{" "}
 
-            {service.rating && (
-              <div className="info-item">
-                ⭐ <strong>Note :</strong>{" "}
-                {service.rating}/5
-              </div>
-            )}
+                  {service.rating}/5
 
-            <button
-              className="availability-btn"
-              onClick={() =>
-                navigate(`/availability/${type}/${id}`)
-              }
-            >
-              💆 Réserver une séance
-            </button>
-          </>
-        )}
+                </div>
+              )}
 
-                {/* ================= DESTINATION ================= */}
+            </div>
+          )}
 
-      {type === "destination" && (
-  <>
-    {service.country ? (
-      <div className="info-item">
-        🌍 <strong>Pays :</strong> {service.country}
-      </div>
-    ) : null}
+          {/* =================================================
+              SPA
+          ================================================= */}
 
-    {service.bestSeason ? (
-      <div className="info-item">
-        ☀ <strong>Meilleure saison :</strong> {service.bestSeason}
-      </div>
-    ) : null}
+          {normalizedType === "spa" && (
 
-    {service.rating && Number(service.rating) > 0 ? (
-      <div className="info-item">
-        ⭐ <strong>Note :</strong> {service.rating}/5
-      </div>
-    ) : null}
+            <div className="service-details">
 
-    {Array.isArray(service.activities) && service.activities.length > 0 ? (
-      <div className="info-item">
-        🎯 <strong>Activités :</strong>{" "}
-        {service.activities.join(" • ")}
-      </div>
-    ) : null}
+              {service.duration && (
+                <div className="info-item">
 
-    <button
-      className="availability-btn"
-      onClick={() =>
-        navigate(`/availability/${type}/${id}`)
-      }
-    >
-      👁 Voir disponibilité
-    </button>
-  </>
-)}
+                  ⏱️
 
-        {type === "offer" && (
-          <>
-            {service.destination && (
+                  <strong>
+                    Durée :
+                  </strong>{" "}
+
+                  {service.duration}
+
+                </div>
+              )}
+
+              {services.length > 0 && (
+                <div className="info-item">
+
+                  💆
+
+                  <strong>
+                    Prestations :
+                  </strong>{" "}
+
+                  {services.join(" • ")}
+
+                </div>
+              )}
+
+              {service.price !== undefined && (
+                <div className="reserve-price">
+
+                  💰 {service.price} TND
+
+                </div>
+              )}
+
+            </div>
+          )}
+
+          {/* =================================================
+              CIRCUIT
+          ================================================= */}
+
+          {(normalizedType === "circuit" ||
+            normalizedType === "circuits") && (
+
+            <div className="service-details">
+
               <div className="info-item">
 
-                📍 <strong>Destination :</strong>{" "}
+                🌍
 
-                {typeof service.destination === "object"
-                  ? service.destination.name ||
-                    service.destination.city ||
-                    service.destination.country
-                  : service.destination}
+                <strong>
+                  Agence :
+                </strong>{" "}
 
-              </div>
-            )}
-
-
-            {service.duration && (
-              <div className="info-item">
-                🗓 <strong>Durée :</strong>{" "}
-                {service.duration}
-              </div>
-            )}
-
-
-            {service.discount && (
-              <div className="info-item">
-                🎁 <strong>Réduction :</strong>{" "}
-                {service.discount}%
-              </div>
-            )}
-
-
-            {service.validUntil && (
-              <div className="info-item">
-                📅 <strong>Valable jusqu'au :</strong>{" "}
-                {service.validUntil}
-              </div>
-            )}
-
-
-
-            {includes.length > 0 && (
-              <div className="info-item">
-
-                ✔ <strong>Inclus :</strong>
-
-                <ul>
-                  {includes.map(
-                    (item, index) => (
-                      <li key={index}>
-                        {item}
-                      </li>
-                    )
-                  )}
-                </ul>
+                {service.agency?.name ||
+                  "Agence touristique"}
 
               </div>
-            )}
 
+              {service.price !== undefined && (
+                <div className="reserve-price">
 
+                  💰 {service.price} TND
 
-            {service.price && (
-              <div className="reserve-price">
-                💰 {service.price} TND
-              </div>
-            )}
+                </div>
+              )}
 
+              {destinationName && (
+                <div className="info-item">
 
+                  📍
 
-            <button
-              className="availability-btn"
-              onClick={() =>
-                navigate(`/availability/${type}/${id}`)
-              }
-            >
-              🎁 Réserver l'offre
-            </button>
+                  <strong>
+                    Destination :
+                  </strong>{" "}
 
-          </>
-        )}
+                  {destinationName}
 
+                </div>
+              )}
 
+              {activities.length > 0 && (
+                <div className="info-item">
 
+                  🎯
 
-        {/* ================= COUPON ================= */}
+                  <strong>
+                    Activités :
+                  </strong>{" "}
 
+                  {activities.join(" • ")}
 
-        {type === "coupon" && (
-          <>
-            <div className="coupon-code">
+                </div>
+              )}
 
-              🎫 <strong>Code promo</strong>
+              {includes.length > 0 && (
+                <div className="info-item">
+
+                  ✔️
+
+                  <strong>
+                    Inclus :
+                  </strong>{" "}
+
+                  {includes.join(" • ")}
+
+                </div>
+              )}
+
+            </div>
+          )}
+
+          {/* =================================================
+              AGENCY
+          ================================================= */}
+
+          {(normalizedType === "agency" ||
+            normalizedType === "agencies") && (
+
+            <div className="service-details">
+
+              {service.license && (
+                <div className="info-item">
+
+                  ✔️
+
+                  <strong>
+                    Licence :
+                  </strong>{" "}
+
+                  {service.license}
+
+                </div>
+              )}
+
+              {service.yearsExperience !==
+                undefined &&
+                service.yearsExperience > 0 && (
+
+                <div className="info-item">
+
+                  📅
+
+                  <strong>
+                    Expérience :
+                  </strong>{" "}
+
+                  {service.yearsExperience} ans
+
+                </div>
+              )}
+
+              {service.rating !== undefined &&
+                Number(service.rating) > 0 && (
+
+                <div className="info-item">
+
+                  ⭐
+
+                  <strong>
+                    Note :
+                  </strong>{" "}
+
+                  {service.rating}/5
+
+                </div>
+              )}
+
+            </div>
+          )}
+
+          {/* =================================================
+              DESTINATION
+          ================================================= */}
+
+          {(normalizedType === "destination" ||
+            normalizedType === "destinations") && (
+
+            <div className="service-details destination-section">
+
+              {service.country && (
+                <div className="info-item">
+
+                  🌍
+
+                  <strong>
+                    Pays :
+                  </strong>{" "}
+
+                  {service.country}
+
+                </div>
+              )}
+
+              {service.city && (
+                <div className="info-item">
+
+                  📍
+
+                  <strong>
+                    Ville :
+                  </strong>{" "}
+
+                  {service.city}
+
+                </div>
+              )}
+
+              {service.bestSeason && (
+                <div className="info-item">
+
+                  ☀️
+
+                  <strong>
+                    Meilleure saison :
+                  </strong>{" "}
+
+                  {service.bestSeason}
+
+                </div>
+              )}
+
+              {activities.length > 0 && (
+                <div className="info-item">
+
+                  🎯
+
+                  <strong>
+                    Activités :
+                  </strong>{" "}
+
+                  {activities.join(" • ")}
+
+                </div>
+              )}
+
+            </div>
+          )}
+
+          {/* =================================================
+              DESTINATION CTA
+          ================================================= */}
+
+          {(normalizedType === "destination" ||
+            normalizedType === "destinations") && (
+
+            <div className="reserve-action">
 
               <h2>
-                {service.code ||
-                  service.coupon ||
-                  "Aucun code disponible"}
+                🌍 Découvrez cette destination
               </h2>
+
+              <p>
+                Consultez les circuits,
+                hôtels, restaurants et autres
+                services disponibles pour cette
+                destination.
+              </p>
+
+              <button
+                type="button"
+                className="availability-btn"
+                onClick={() => navigate("/")}
+              >
+                ← Retour aux voyages
+              </button>
+
+            </div>
+          )}
+
+          {/* =================================================
+              OFFER
+          ================================================= */}
+
+          {(normalizedType === "offer" ||
+            normalizedType === "offers") && (
+
+            <div className="service-details offer-section">
+
+              {service.discount !== undefined && (
+                <div className="info-item">
+
+                  🎁
+
+                  <strong>
+                    Réduction :
+                  </strong>{" "}
+
+                  {service.discount}%
+
+                </div>
+              )}
+
+              {service.duration && (
+                <div className="info-item">
+
+                  🗓️
+
+                  <strong>
+                    Durée :
+                  </strong>{" "}
+
+                  {service.duration}
+
+                </div>
+              )}
+
+              {service.price !== undefined && (
+                <div className="reserve-price">
+
+                  💰 {service.price} TND
+
+                </div>
+              )}
+
+              {service.validUntil && (
+                <div className="info-item">
+
+                  📅
+
+                  <strong>
+                    Valable jusqu'au :
+                  </strong>{" "}
+
+                  {service.validUntil}
+
+                </div>
+              )}
+
+              {includes.length > 0 && (
+                <div className="info-item">
+
+                  ✔️
+
+                  <strong>
+                    Inclus :
+                  </strong>
+
+                  <ul>
+
+                    {includes.map(
+                      (item, index) => (
+                        <li key={index}>
+                          {item}
+                        </li>
+                      )
+                    )}
+
+                  </ul>
+
+                </div>
+              )}
+
+            </div>
+          )}
+
+          {/* =================================================
+              OFFER CTA
+          ================================================= */}
+
+          {(normalizedType === "offer" ||
+            normalizedType === "offers") && (
+
+            <div className="reserve-action">
+
+              <h2>
+                🎁 Profitez de cette offre
+              </h2>
+
+              <p>
+                Consultez la disponibilité
+                puis envoyez votre demande de
+                réservation à l'administrateur.
+              </p>
+
+              <button
+                type="button"
+                className="availability-btn"
+                onClick={goToAvailability}
+              >
+                🔎 Vérifier la disponibilité
+              </button>
+
+            </div>
+          )}
+
+          {/* =================================================
+              COUPON
+          ================================================= */}
+
+          {(normalizedType === "coupon" ||
+            normalizedType === "coupons") && (
+
+            <div className="service-details coupon-section">
+
+              <div className="info-item">
+
+                🎫
+
+                <strong>
+                  Code promo
+                </strong>
+
+              </div>
+
+              {couponCode ? (
+
+                <div className="coupon-code">
+
+                  <h2>
+                    {couponCode}
+                  </h2>
+
+                </div>
+
+              ) : (
+
+                <div className="info-item">
+
+                  Aucun code promo disponible.
+
+                </div>
+
+              )}
+
+              {service.discount !== undefined && (
+                <div className="info-item">
+
+                  💸
+
+                  <strong>
+                    Réduction :
+                  </strong>{" "}
+
+                  {service.discount}%
+
+                </div>
+              )}
+
+              {couponExpireDate && (
+                <div className="info-item">
+
+                  📅
+
+                  <strong>
+                    Expire le :
+                  </strong>{" "}
+
+                  {new Date(
+                    couponExpireDate
+                  ).toLocaleDateString("fr-FR")}
+
+                </div>
+              )}
+
+              {service.active !== undefined && (
+                <div className="info-item">
+
+                  {service.active
+                    ? "🟢 Coupon actif"
+                    : "🔴 Coupon inactif"}
+
+                </div>
+              )}
+
+              {couponCode && (
+
+                <button
+                  type="button"
+                  className="availability-btn"
+                  onClick={copyCoupon}
+                >
+                  📋 Copier le code
+                </button>
+
+              )}
+
+            </div>
+          )}
+
+          {/* =================================================
+              COUPON CTA
+          ================================================= */}
+
+          {(normalizedType === "coupon" ||
+            normalizedType === "coupons") && (
+
+            <div className="reserve-action">
+
+              <h2>
+                🎫 Utilisez votre code promo
+              </h2>
+
+              <p>
+                Copiez le code ci-dessus et
+                utilisez-le lors de votre
+                réservation.
+              </p>
+
+            </div>
+          )}
+
+          {/* =================================================
+              CONTACT
+              
+              IMPORTANT :
+              Adresse + ville + pays + horaires
+              sont affichés ici uniquement.
+          ================================================= */}
+
+          {showContact && (
+
+            <div className="contact-box">
+
+              <h2>
+                💬 Contact
+              </h2>
+
+              {/* ================================
+                  WHATSAPP
+              ================================= */}
+
+              {whatsappUrl && (
+
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-link whatsapp-link"
+                >
+                  💬 Contacter sur WhatsApp
+                </a>
+
+              )}
+
+              {/* ================================
+                  EMAIL
+              ================================= */}
+
+              {email && (
+
+                <a
+                  href={`mailto:${email}`}
+                  className="contact-link"
+                >
+                  ✉️ {email}
+                </a>
+
+              )}
+
+              {/* ================================
+                  WEBSITE
+              ================================= */}
+
+              {websiteUrl && (
+
+                <a
+                  href={websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-link"
+                >
+                  🌐 Visiter le site web
+                </a>
+
+              )}
+
+              {/* ================================
+                  ADRESSE + VILLE + PAYS
+              ================================= */}
+
+              {(address ||
+                service.city ||
+                service.country) && (
+
+                <div className="contact-link">
+
+                  📍{" "}
+
+                  {address}
+
+                  {address &&
+                    service.city &&
+                    ", "}
+
+                  {service.city}
+
+                  {service.city &&
+                    service.country &&
+                    ", "}
+
+                  {service.country}
+
+                </div>
+
+              )}
+
+              {/* ================================
+                  HORAIRES
+              ================================= */}
+
+              {openingHours && (
+
+                <div className="contact-link">
+
+                  🕒 {openingHours}
+
+                </div>
+
+              )}
 
             </div>
 
+          )}
 
+          {/* =================================================
+              CONTACT INFORMATION
+          ================================================= */}
 
-            {service.discount && (
-              <div className="info-item">
+          {showContact && (
 
-                💸 <strong>Réduction :</strong>{" "}
-                {service.discount}%
+            <div className="contact-information">
 
-              </div>
-            )}
+              <p>
 
+                💡 Vous pouvez contacter
+                directement l'établissement
+                avant d'envoyer votre demande
+                de réservation.
 
+              </p>
 
-            {service.expiryDate && (
-              <div className="info-item">
+            </div>
 
-                📅 <strong>Expire le :</strong>{" "}
-                {service.expiryDate}
+          )}
 
-              </div>
-            )}
+          {/* =================================================
+              RESERVATION CTA
+          ================================================= */}
 
+          {canReserve &&
+            normalizedType !== "offer" &&
+            normalizedType !== "offers" && (
 
+            <div className="reserve-action">
 
-            <button
-              className="availability-btn"
-              onClick={() => {
+              <h2>
+                📝 Vous souhaitez réserver ?
+              </h2>
 
-                const code =
-                  service.code ||
-                  service.coupon;
+              <p>
+                Consultez la disponibilité
+                puis envoyez votre demande
+                de réservation à
+                l'administrateur.
+              </p>
 
+              <button
+                type="button"
+                className="availability-btn"
+                onClick={goToAvailability}
+              >
+                🔎 Vérifier la disponibilité
+              </button>
 
-                if(code){
+            </div>
 
-                  navigator.clipboard.writeText(code);
+          )}
 
-                  alert(
-                    "Le code promo a été copié !"
-                  );
-
-                }
-
-              }}
-            >
-
-              📋 Copier le code
-
-            </button>
-
-
-          </>
-        )}
-
-                {/* ================= CIRCUIT ================= */}
-
-        {type === "circuit" && (
-<>
-  <div className="info-item">
-    🌍 <strong>Agence :</strong>{" "}
-    {service.agency?.name || "Agence touristique"}
-  </div>
-
-
-  {service.price && (
-    <div className="reserve-price">
-      💰 {service.price} TND
-    </div>
-  )}
-
-
-  {service.destination && (
-    <div className="info-item">
-      📍 <strong>Destination :</strong>{" "}
-      {
-        typeof service.destination === "object"
-        ? service.destination.name ||
-          service.destination.city ||
-          service.destination.country
-        : service.destination
-      }
-    </div>
-  )}
-
-
-  <button
-    className="availability-btn"
-    onClick={() =>
-      navigate(`/availability/${type}/${id}`)
-    }
-  >
-    🌍 Voir disponibilité
-  </button>
-
-</>
-)}
-
-
-
-        {/* ================= AGENCY ================= */}
-
-
-       {type === "agency" && (
-  <>
-    {service.license ? (
-      <div className="info-item">
-        ✔ <strong>Licence :</strong>{" "}
-        {service.license}
-      </div>
-    ) : null}
-
-    {service.yearsExperience && Number(service.yearsExperience) > 0 ? (
-      <div className="info-item">
-        📅 <strong>Expérience :</strong>{" "}
-        {service.yearsExperience} ans
-      </div>
-    ) : null}
-
-    {service.rating && Number(service.rating) > 0 ? (
-      <div className="info-item">
-        ⭐ <strong>Note :</strong>{" "}
-        {service.rating}/5
-      </div>
-    ) : null}
-
-    <button
-      className="availability-btn"
-      onClick={() =>
-        navigate(`/availability/${type}/${id}`)
-      }
-    >
-      ✈ Contacter l'agence
-    </button>
-  </>
-)}
-
-
-
-
-
-        
-{["hotel", "restaurant", "spa", "agency", "circuit"].includes(type || "") && (
-  <div className="contact-box">
-
-    <div className="contact-title">
-      📞 Contact
-    </div>
-
-    {phone && (
-  <div className="contact-item">
-    💬{" "}
-    <a
-      href={`https://wa.me/${phone.replace(/\D/g, "")}`}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {phone}
-    </a>
-  </div>
-)}
-
-    {email && (
-      <div className="contact-item">
-        ✉️ <a href={`mailto:${email}`}>{email}</a>
-      </div>
-    )}
-
-    {websiteUrl && (
-      <div className="contact-item">
-        🌐
-        <a
-          href={websiteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Visiter le site web
-        </a>
-      </div>
-    )}
-
-    {address && (
-      <div className="contact-item">
-        📍 {address}
-      </div>
-    )}
-
-   
-
-  </div>
-)}
-        {/* ================= RETOUR ================= */}
-
-
-        <button
-          className="back-btn"
-          onClick={() => navigate("/")}
-        >
-
-          ⬅ Retour
-
-        </button>
-
+        </div>
 
       </div>
 
     </div>
-
-  </div>
-);
+  );
 }

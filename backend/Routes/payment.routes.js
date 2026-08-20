@@ -2,58 +2,83 @@ import express from "express";
 
 import {
   createCheckoutSession,
-  stripeWebhook,
-  getPayments
+  createPayment,
+  getPayments,
+  getPaymentById,
+  updatePayment,
+  deletePayment,
+  getPaymentStats,
+  generateInvoice,
 } from "../controllers/payment.controller.js";
-
-import { authMiddleware } from "../middlewares/authmiddleware.js";
-
 
 const router = express.Router();
 
+// ==================================================
+// STRIPE CHECKOUT
+// ==================================================
 
-
-// TEST ROUTE
-router.get("/test",(req,res)=>{
-
-  res.json({
-    message:"Payment route OK"
-  });
-
-});
-
-
-
-// CREATE STRIPE CHECKOUT
-// POST http://localhost:5000/api/payments/checkout
+// POST /api/payments/create-checkout-session
 router.post(
-  "/checkout",
-  authMiddleware,
+  "/create-checkout-session",
   createCheckoutSession
 );
 
+// ==================================================
+// PAYMENT STATISTICS
+// ==================================================
 
-
-// STRIPE WEBHOOK
-// POST http://localhost:5000/api/payments/webhook
-router.post(
-  "/webhook",
-  express.raw({
-    type:"application/json"
-  }),
-  stripeWebhook
+// GET /api/payments/stats
+router.get(
+  "/stats",
+  getPaymentStats
 );
 
+// ==================================================
+// PAYMENTS
+// ==================================================
 
+// POST /api/payments
+router.post(
+  "/",
+  createPayment
+);
 
-// GET PAYMENTS
-// GET http://localhost:5000/api/payments
+// GET /api/payments
 router.get(
   "/",
-  authMiddleware,
   getPayments
 );
 
+// ==================================================
+// INVOICE
+// ==================================================
 
+// POST /api/payments/:id/invoice
+router.post(
+  "/:id/invoice",
+  generateInvoice
+);
+
+// ==================================================
+// PAYMENT BY ID
+// ==================================================
+
+// GET /api/payments/:id
+router.get(
+  "/:id",
+  getPaymentById
+);
+
+// PUT /api/payments/:id
+router.put(
+  "/:id",
+  updatePayment
+);
+
+// DELETE /api/payments/:id
+router.delete(
+  "/:id",
+  deletePayment
+);
 
 export default router;

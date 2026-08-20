@@ -1,0 +1,189 @@
+/* =====================================================
+   DASHBOARD NAVBAR
+===================================================== */
+
+.dashboard-navbar {
+  width: 100%;
+  height: 70px;
+
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 35px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  position: relative;
+  z-index: 100;
+}
+
+
+/* =====================================================
+   NAVBAR LEFT
+===================================================== */
+
+.dashboard-navbar-left {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+
+/* =====================================================
+   NAVIGATION LINKS
+===================================================== */
+
+.dashboard-nav-link {
+  flex: 1;
+
+  min-width: 150px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 44px;
+
+  padding: 0 18px;
+
+  box-sizing: border-box;
+
+  color: #374151;
+
+  text-decoration: none;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  border-radius: 10px;
+
+  white-space: nowrap;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.2s ease;
+}
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+.dashboard-nav-link:hover {
+  background: #f1f5f9;
+
+  color: #2563eb;
+
+  transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   ACTIVE
+===================================================== */
+
+.dashboard-nav-link.active {
+  background: #2563eb;
+
+  color: #ffffff;
+
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+
+/* =====================================================
+   ACTIVE HOVER
+===================================================== */
+
+.dashboard-nav-link.active:hover {
+  background: #1d4ed8;
+
+  color: #ffffff;
+
+  transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .dashboard-navbar {
+    padding: 0 20px;
+  }
+
+  .dashboard-navbar-left {
+    gap: 10px;
+  }
+
+  .dashboard-nav-link {
+    min-width: auto;
+
+    padding: 0 10px;
+
+    font-size: 14px;
+  }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 700px) {
+
+  .dashboard-navbar {
+    height: auto;
+
+    padding: 15px;
+  }
+
+  .dashboard-navbar-left {
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 10px;
+  }
+
+  .dashboard-nav-link {
+    flex: 0 0 calc(50% - 5px);
+
+    min-width: 0;
+
+    height: 42px;
+
+    font-size: 13px;
+  }
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 450px) {
+
+  .dashboard-nav-link {
+    flex: 0 0 100%;
+
+    width: 100%;
+  }
+}

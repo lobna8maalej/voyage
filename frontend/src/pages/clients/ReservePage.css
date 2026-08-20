@@ -1,338 +1,546 @@
-/* ================= PAGE ================= */
+/* =====================================================
+   PAGE PRINCIPALE
+===================================================== */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+.reserve-page {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: #f5f7fb;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
 }
 
+/* =====================================================
+   CARTE PRINCIPALE
+===================================================== */
 
-body{
-
-    background:#f5f7fb;
-
-    font-family:Arial, Helvetica, sans-serif;
-
+.reserve-card {
+  width: 100%;
+  max-width: 950px;
+  background: #ffffff;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.10);
+  border: 1px solid #e9edf3;
 }
 
+/* =====================================================
+   IMAGE
+===================================================== */
 
-
-/* ================= RESERVE PAGE ================= */
-
-
-.reserve-page{
-
-    width:100%;
-
-    min-height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    padding:30px;
-
+.reserve-image-container {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  overflow: hidden;
+  background: #e9edf3;
 }
 
-
-
-/* ================= CARD ================= */
-
-
-.reserve-card{
-
-    width:100%;
-
-    max-width:900px;
-
-    background:white;
-
-    border-radius:18px;
-
-    overflow:hidden;
-
-    box-shadow:0 10px 30px rgba(0,0,0,.15);
-
-    display:flex;
-
-    flex-direction:column;
-
+.reserve-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.4s ease;
 }
 
-
-
-/* ================= IMAGE ================= */
-
-
-.reserve-image{
-
-    width:100%;
-
-    height:350px;
-
-    object-fit:cover;
-
+.reserve-image-container:hover .reserve-image {
+  transform: scale(1.03);
 }
 
+/* =====================================================
+   OVERLAY IMAGE
+===================================================== */
 
-
-/* ================= CONTENT ================= */
-
-
-.reserve-content{
-
-    padding:30px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:15px;
-
+.image-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 25px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.65),
+    rgba(0, 0, 0, 0)
+  );
 }
 
+/* =====================================================
+   BADGE SERVICE
+===================================================== */
 
-
-.reserve-title{
-
-    font-size:32px;
-
-    color:#2563eb;
-
-    font-weight:700;
-
+.service-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #1f2937;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
 }
 
+/* =====================================================
+   CONTENU
+===================================================== */
 
-
-.reserve-location{
-
-    font-size:16px;
-
-    color:#555;
-
+.reserve-content {
+  padding: 35px;
 }
 
+/* =====================================================
+   TITRE
+===================================================== */
 
-
-.reserve-description{
-
-    color:#666;
-
-    font-size:15px;
-
-    line-height:1.6;
-
+.reserve-title {
+  margin: 0;
+  color: #172033;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
+/* =====================================================
+   LOCATION
+===================================================== */
 
-
-/* ================= PRICE ================= */
-
-
-.reserve-price{
-
-    font-size:22px;
-
-    font-weight:bold;
-
-    color:#16a34a;
-
-    margin-top:10px;
-
+.reserve-location {
+  margin: 12px 0 25px;
+  color: #667085;
+  font-size: 17px;
+  font-weight: 500;
 }
 
+/* =====================================================
+   DESCRIPTION
+===================================================== */
 
-
-/* ================= AVAILABILITY BUTTON ================= */
-
-
-.availability-btn{
-
-    width:220px;
-
-    height:45px;
-
-    border:none;
-
-    border-radius:10px;
-
-    background:#2563eb;
-
-    color:white;
-
-    font-size:15px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:.3s;
-
+.description-box {
+  margin-top: 25px;
+  padding: 22px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #e7ebf0;
 }
 
-
-
-.availability-btn:hover{
-
-    background:#1d4ed8;
-
+.description-box h2 {
+  margin: 0 0 12px;
+  color: #172033;
+  font-size: 20px;
+  font-weight: 750;
 }
 
-
-
-/* ================= CONTACT ================= */
-
-
-.contact-box{
-
-    margin-top:20px;
-
-    padding:20px;
-
-    background:#f8fafc;
-
-    border-radius:12px;
-
-    border:1px solid #e5e7eb;
-
+.description-box p {
+  margin: 0;
+  color: #596579;
+  font-size: 16px;
+  line-height: 1.7;
 }
 
+/* =====================================================
+   DETAILS SERVICE
+===================================================== */
 
-
-.contact-item{
-
-    margin-bottom:12px;
-
-    font-size:15px;
-
-    color:#444;
-
+.service-details {
+  margin-top: 25px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e6eaf0;
+  border-radius: 16px;
 }
 
-
-
-.contact-item a{
-
-    color:#2563eb;
-
-    text-decoration:none;
-
-    margin-left:5px;
-
+.info-item {
+  padding: 11px 0;
+  color: #475467;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
-
-
-.contact-item a:hover{
-
-    text-decoration:underline;
-
+.info-item + .info-item {
+  border-top: 1px solid #edf0f4;
 }
 
-
-
-/* ================= BACK BUTTON ================= */
-
-
-.back-btn{
-
-    width:150px;
-
-    height:40px;
-
-    border:none;
-
-    border-radius:8px;
-
-    background:#64748b;
-
-    color:white;
-
-    font-size:14px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    margin-top:15px;
-
+.info-item strong {
+  color: #1d2939;
 }
 
+/* =====================================================
+   PRIX
+===================================================== */
 
-
-.back-btn:hover{
-
-    background:#475569;
-
+.reserve-price {
+  margin: 15px 0;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  font-size: 19px;
+  font-weight: 800;
 }
 
+/* =====================================================
+   LISTES
+===================================================== */
 
-
-/* ================= ERROR ================= */
-
-
-.error-message{
-
-    color:red;
-
-    text-align:center;
-
-    font-size:18px;
-
-    margin-top:50px;
-
+.info-item ul {
+  margin: 10px 0 0;
+  padding-left: 25px;
 }
 
+.info-item li {
+  margin: 6px 0;
+  color: #596579;
+}
 
+/* =====================================================
+   CONTACT
+===================================================== */
 
+.contact-box {
+  margin-top: 30px;
+  padding: 25px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
 
+.contact-box h2 {
+  margin: 0 0 18px;
+  color: #172033;
+  font-size: 22px;
+  font-weight: 800;
+}
 
-/* ================= RESPONSIVE ================= */
+/* =====================================================
+   LIENS CONTACT
+===================================================== */
 
+.contact-link {
+  display: block;
+  width: fit-content;
+  margin: 10px 0;
+  color: #344054;
+  text-decoration: none;
+  font-size: 15px;
+  line-height: 1.6;
+  transition: color 0.2s ease;
+}
 
-@media(max-width:700px){
+a.contact-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
 
+/* =====================================================
+   INFORMATION CONTACT
+===================================================== */
 
-    .reserve-page{
+.contact-information {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+}
 
-        padding:15px;
+.contact-information p {
+  margin: 0;
+  color: #344054;
+  font-size: 15px;
+  line-height: 1.6;
+}
 
-    }
+/* =====================================================
+   ACTION RÉSERVATION
+===================================================== */
 
+.reserve-action {
+  margin-top: 30px;
+  padding: 28px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+}
 
+.reserve-action h2 {
+  margin: 0 0 12px;
+  color: #172033;
+  font-size: 24px;
+  font-weight: 800;
+}
 
-    .reserve-image{
+.reserve-action p {
+  margin: 0 auto 22px;
+  max-width: 650px;
+  color: #667085;
+  font-size: 15px;
+  line-height: 1.7;
+}
 
-        height:220px;
+/* =====================================================
+   BOUTON DISPONIBILITÉ
+===================================================== */
 
-    }
+.availability-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 14px 24px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
 
+.availability-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+}
 
+.availability-btn:active {
+  transform: translateY(0);
+}
 
-    .reserve-content{
+/* =====================================================
+   COUPON
+===================================================== */
 
-        padding:20px;
+.coupon-section {
+  margin-top: 30px;
+  text-align: center;
+  background: #fffbeb;
+  border: 2px dashed #f59e0b;
+}
 
-    }
+.coupon-section .info-item {
+  border: none;
+  color: #92400e;
+}
 
+.coupon-code {
+  margin: 20px auto;
+  max-width: 400px;
+  padding: 18px 25px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 2px dashed #f59e0b;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
 
+.coupon-code h2 {
+  margin: 0;
+  color: #b45309;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  word-break: break-word;
+}
 
-    .reserve-title{
+/* =====================================================
+   DESTINATION
+===================================================== */
 
-        font-size:24px;
+.reserve-page
+  .service-details:has(.info-item strong) {
+  box-sizing: border-box;
+}
 
-    }
+/* =====================================================
+   OFFRE
+===================================================== */
 
+.reserve-page .service-details {
+  box-sizing: border-box;
+}
 
+/* Réduction des offres */
 
-    .availability-btn{
+.reserve-page .service-details .info-item strong {
+  font-weight: 750;
+}
 
-        width:100%;
+/* =====================================================
+   LOADING
+===================================================== */
 
-    }
+.loading-card {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
 
+.loading-card p {
+  margin: 0;
+  color: #667085;
+  font-size: 16px;
+}
 
+/* =====================================================
+   SPINNER
+===================================================== */
+
+.loading-spinner {
+  width: 45px;
+  height: 45px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: reserve-spin 0.8s linear infinite;
+}
+
+@keyframes reserve-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =====================================================
+   ERREUR
+===================================================== */
+
+.error-card {
+  min-height: 280px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.error-message {
+  margin: 0 0 25px;
+  color: #dc2626;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* =====================================================
+   BOUTON RETOUR
+===================================================== */
+
+.back-button {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 22px;
+  background: #344054;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.back-button:hover {
+  background: #1f2937;
+}
+
+/* =====================================================
+   RESPONSIVE TABLETTE
+===================================================== */
+
+@media (max-width: 768px) {
+  .reserve-page {
+    padding: 20px 12px;
+  }
+
+  .reserve-card {
+    border-radius: 16px;
+  }
+
+  .reserve-image-container {
+    height: 280px;
+  }
+
+  .reserve-content {
+    padding: 22px;
+  }
+
+  .reserve-title {
+    font-size: 28px;
+  }
+
+  .description-box,
+  .service-details,
+  .contact-box,
+  .reserve-action {
+    padding: 18px;
+  }
+
+  .coupon-code h2 {
+    font-size: 22px;
+  }
+}
+
+/* =====================================================
+   RESPONSIVE MOBILE
+===================================================== */
+
+@media (max-width: 480px) {
+  .reserve-page {
+    padding: 10px;
+  }
+
+  .reserve-image-container {
+    height: 220px;
+  }
+
+  .reserve-content {
+    padding: 16px;
+  }
+
+  .reserve-title {
+    font-size: 24px;
+  }
+
+  .reserve-location {
+    font-size: 15px;
+  }
+
+  .description-box h2,
+  .contact-box h2 {
+    font-size: 19px;
+  }
+
+  .reserve-action h2 {
+    font-size: 20px;
+  }
+
+  .info-item,
+  .description-box p,
+  .contact-link {
+    font-size: 14px;
+  }
+
+  .reserve-price {
+    font-size: 17px;
+  }
+
+  .availability-btn {
+    width: 100%;
+    padding: 13px 16px;
+    font-size: 15px;
+  }
+
+  .coupon-code {
+    padding: 15px;
+  }
+
+  .coupon-code h2 {
+    font-size: 19px;
+    letter-spacing: 1px;
+  }
 }

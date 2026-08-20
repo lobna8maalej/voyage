@@ -1,11 +1,40 @@
 import express from "express";
-import { generateQR } from "../controllers/qr.controller.js";
-import { authMiddleware } from "../middlewares/authmiddleware.js";
-import { verifyQR } from "../controllers/qr.controller.js";
+
+import {
+  generateQR,
+  verifyQR,
+} from "../controllers/qr.controller.js";
+
+import {
+  authMiddleware,
+} from "../middlewares/authMiddleware.js";
+
+
 const router = express.Router();
 
-// Generate QR Code for booking
-router.post("/generate", authMiddleware, generateQR);
-router.post("/verify", verifyQR);
+
+/* =====================================================
+   GENERATE QR CODE
+   POST /api/qr/generate
+===================================================== */
+
+router.post(
+  "/generate",
+  authMiddleware,
+  generateQR
+);
+
+
+/* =====================================================
+   VERIFY QR CODE
+   POST /api/qr/verify
+===================================================== */
+
+router.post(
+  "/verify",
+  authMiddleware,
+  verifyQR
+);
+
 
 export default router;

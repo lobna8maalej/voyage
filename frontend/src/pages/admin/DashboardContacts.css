@@ -1,0 +1,596 @@
+/* =====================================================
+   DASHBOARD CONTACTS
+===================================================== */
+
+.dashboard-contacts {
+  width: 100%;
+  max-width: 1250px;
+
+  margin: 0 auto;
+  padding: 35px 30px 50px;
+
+  box-sizing: border-box;
+
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.dashboard-contacts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+
+  margin-bottom: 30px;
+}
+
+.dashboard-contacts-header h1 {
+  margin: 0 0 8px;
+
+  color: #111827;
+
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.dashboard-contacts-header p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 15px;
+}
+
+
+/* =====================================================
+   REFRESH BUTTON
+===================================================== */
+
+.refresh-btn {
+  border: none;
+
+  background: #2563eb;
+  color: white;
+
+  padding: 12px 20px;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  white-space: nowrap;
+}
+
+.refresh-btn:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.error-message {
+  margin-bottom: 25px;
+
+  padding: 15px 18px;
+
+  background: #fef2f2;
+
+  border: 1px solid #fecaca;
+
+  border-radius: 10px;
+
+  color: #b91c1c;
+
+  font-size: 14px;
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+.contacts-stats {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 20px;
+
+  margin-bottom: 35px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 20px 22px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+.stat-card > span {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #eff6ff;
+
+  border-radius: 10px;
+
+  font-size: 23px;
+}
+
+.stat-card strong {
+  display: block;
+
+  color: #111827;
+
+  font-size: 25px;
+
+  line-height: 1.1;
+}
+
+.stat-card p {
+  margin: 5px 0 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   CONTACTS LIST
+===================================================== */
+
+.contacts-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 25px;
+}
+
+
+/* =====================================================
+   CONTACT CARD
+===================================================== */
+
+.contact-card {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 26px 28px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 14px;
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.contact-card:hover {
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+
+  transform: translateY(-2px);
+}
+
+
+/* =====================================================
+   CARD HEADER
+===================================================== */
+
+.contact-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 25px;
+
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #edf0f3;
+}
+
+.contact-card-header h2 {
+  margin: 0 0 9px;
+
+  color: #111827;
+
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.contact-date {
+  display: block;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.status-badge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 65px;
+
+  padding: 7px 12px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-transform: capitalize;
+
+  white-space: nowrap;
+}
+
+.status-new {
+  background: #dcfce7;
+
+  color: #15803d;
+}
+
+.status-read {
+  background: #dbeafe;
+
+  color: #1d4ed8;
+}
+
+.status-viewed {
+  background: #dbeafe;
+
+  color: #1d4ed8;
+}
+
+.status-treated {
+  background: #e0e7ff;
+
+  color: #4338ca;
+}
+
+
+/* =====================================================
+   CLIENT
+===================================================== */
+
+.contact-client {
+  padding: 20px 0;
+
+  border-bottom: 1px solid #edf0f3;
+}
+
+.contact-client h3,
+.contact-message h3 {
+  margin: 0 0 14px;
+
+  color: #374151;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.client-info {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 15px 25px;
+}
+
+.client-info p {
+  margin: 0;
+
+  color: #4b5563;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  word-break: break-word;
+}
+
+.client-info strong {
+  color: #111827;
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+.contact-message {
+  padding: 20px 0;
+}
+
+.message-content {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 18px 20px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+
+  color: #374151;
+
+  font-size: 14px;
+
+  line-height: 1.7;
+
+  white-space: pre-wrap;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.contact-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding-top: 5px;
+}
+
+.action-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+
+  padding: 0 18px;
+
+  border-radius: 8px;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  transition: all 0.2s ease;
+}
+
+
+/* =====================================================
+   EMAIL
+===================================================== */
+
+.email-btn {
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  border: 1px solid #bfdbfe;
+}
+
+.email-btn:hover {
+  background: #dbeafe;
+
+  color: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   WHATSAPP
+===================================================== */
+
+.whatsapp-btn {
+  background: #ecfdf5;
+
+  color: #15803d;
+
+  border: 1px solid #bbf7d0;
+}
+
+.whatsapp-btn:hover {
+  background: #dcfce7;
+
+  color: #166534;
+
+  transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.empty-contacts {
+  text-align: center;
+
+  padding: 70px 30px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 14px;
+}
+
+.empty-icon {
+  font-size: 50px;
+
+  margin-bottom: 15px;
+}
+
+.empty-contacts h2 {
+  margin: 0 0 8px;
+
+  color: #111827;
+
+  font-size: 21px;
+}
+
+.empty-contacts p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.dashboard-loading {
+  min-height: 300px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #6b7280;
+
+  font-size: 16px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .dashboard-contacts {
+    padding: 25px 20px 40px;
+  }
+
+  .contacts-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .client-info {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-card {
+    padding: 22px;
+  }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 650px) {
+
+  .dashboard-contacts-header {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .refresh-btn {
+    width: 100%;
+  }
+
+  .contact-card-header {
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+  .status-badge {
+    align-self: flex-start;
+  }
+
+  .contact-actions {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .action-btn {
+    width: 100%;
+
+    box-sizing: border-box;
+  }
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 450px) {
+
+  .dashboard-contacts {
+    padding: 20px 12px 35px;
+  }
+
+  .contact-card {
+    padding: 18px;
+  }
+
+  .contact-card-header h2 {
+    font-size: 18px;
+  }
+
+  .message-content {
+    padding: 15px;
+  }
+}
+

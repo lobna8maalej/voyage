@@ -1,11 +1,20 @@
 import express from "express";
-import { getPayments } from "../controllers/payment.controller.js";
 
-import { authMiddleware } from "../middlewares/authMiddleware.js";
-import isAdmin from "../middlewares/isAdmin.js";
+import {
+  getAdminStatistics,
+  getAdminPayments,
+} from "../controllers/admin.controller.js";
 
 const router = express.Router();
 
-router.get("/payments", authMiddleware, isAdmin, getPayments);
+router.get(
+  "/statistics",
+  getAdminStatistics
+);
+
+router.get(
+  "/payments",
+  getAdminPayments
+);
 
 export default router;

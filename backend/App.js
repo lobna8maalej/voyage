@@ -4,7 +4,10 @@ import path from "path";
 
 import { stripeWebhook } from "./controllers/payment.controller.js";
 
-// routes
+// ========================================
+// ROUTES
+// ========================================
+
 import roomRoutes from "./routes/room.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
@@ -23,8 +26,21 @@ import servicesRoutes from "./routes/servicesRoutes.js";
 import uploadRoutes from "./routes/upload.routes.js";
 import qrRoutes from "./routes/qr.routes.js";
 import agencyRoutes from "./routes/agencyRoutes.js";
-import aiRoutes from "./routes/aiRoutes.js"
+import aiRoutes from "./routes/aiRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
+
+// ⭐ IMPORTANT
+// Reservation doit aussi utiliser ES Module
+
+// ========================================
+// APP
+// ========================================
+
 const app = express();
+
+// ========================================
+// CORS
+// ========================================
 
 app.use(
   cors({
@@ -36,40 +52,260 @@ app.use(
   })
 );
 
-// webhook
+// ========================================
+// STRIPE WEBHOOK
+// IMPORTANT : AVANT express.json()
+// ========================================
+
 app.post(
   "/api/payment/webhook",
-  express.raw({ type: "application/json" }),
+  express.raw({
+    type: "application/json",
+  }),
   stripeWebhook
 );
 
-// body parser
+// ========================================
+// BODY PARSER
+// ========================================
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// static uploads (FIXED)
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
-// routes
-app.use("/api/rooms", roomRoutes);
-app.use("/api/bookings", bookingRoutes);
-app.use("/api/payments", paymentRoutes);
-app.use("/api/auth", userRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/twilio", twilioRoutes);
-app.use("/api/chat", aiRoutes);
-app.use("/api/hotels", hotelRoutes);
-app.use("/api/offers", offerRoutes);
-app.use("/api/circuits", circuitRoutes);
-app.use("/api/destinations", destinationRoutes);
-app.use("/api/restaurants", restaurantRoutes);
-app.use("/api/spa", spaRoutes);
-app.use("/api/coupons", couponRoutes);
-app.use("/api/reviews", reviewRoutes);
-app.use("/api/services", servicesRoutes);
+// ========================================
+// STATIC UPLOADS
+// ========================================
 
-app.use("/api/uploads", uploadRoutes);
-app.use("/api/qr", qrRoutes);
-app.use("/api/agency", agencyRoutes);
+app.use(
+  "/uploads",
+  express.static(
+    path.join(process.cwd(), "uploads")
+  )
+);
+
+// ========================================
+// ROUTES API
+// ========================================
+
+// ========================================
+// 🛏️ ROOMS
+// ========================================
+
+app.use(
+  "/api/rooms",
+  roomRoutes
+);
+
+// ========================================
+// 🎫 BOOKINGS
+// ========================================
+
+app.use(
+  "/api/bookings",
+  bookingRoutes
+);
+
+// ========================================
+// 💳 PAYMENTS
+// ========================================
+
+app.use(
+  "/api/payments",
+  paymentRoutes
+);
+
+// ========================================
+// 🔐 AUTHENTICATION
+// ========================================
+
+app.use(
+  "/api/auth",
+  userRoutes
+);
+
+// ========================================
+// 👑 ADMIN
+// ========================================
+
+app.use(
+  "/api/admin",
+  adminRoutes
+);
+
+// ========================================
+// 📱 TWILIO
+// ========================================
+
+app.use(
+  "/api/twilio",
+  twilioRoutes
+);
+
+// ========================================
+// 🤖 AI / CHAT
+// ========================================
+
+app.use(
+  "/api/chat",
+  aiRoutes
+);
+
+// ========================================
+// 🏨 HOTELS
+// ========================================
+
+app.use(
+  "/api/hotels",
+  hotelRoutes
+);
+
+// ========================================
+// 🎁 OFFERS
+// ========================================
+
+app.use(
+  "/api/offers",
+  offerRoutes
+);
+
+// ========================================
+// 🌍 CIRCUITS
+// ========================================
+
+app.use(
+  "/api/circuits",
+  circuitRoutes
+);
+
+// ========================================
+// 📍 DESTINATIONS
+// ========================================
+
+app.use(
+  "/api/destinations",
+  destinationRoutes
+);
+
+// ========================================
+// 🍽️ RESTAURANTS
+// ========================================
+
+app.use(
+  "/api/restaurants",
+  restaurantRoutes
+);
+
+// ========================================
+// 💆 SPA
+// ========================================
+
+app.use(
+  "/api/spa",
+  spaRoutes
+);
+
+// ========================================
+// 🎟️ COUPONS
+// ========================================
+
+app.use(
+  "/api/coupons",
+  couponRoutes
+);
+
+// ========================================
+// ⭐ REVIEWS
+// ========================================
+
+app.use(
+  "/api/reviews",
+  reviewRoutes
+);
+
+// ========================================
+// 🛎️ SERVICES
+// ========================================
+
+app.use(
+  "/api/services",
+  servicesRoutes
+);
+
+// ========================================
+// 📩 CONTACTS
+// ========================================
+
+app.use(
+  "/api/contacts",
+  contactRoutes
+);
+
+// ========================================
+// 📤 UPLOADS API
+// ========================================
+
+app.use(
+  "/api/uploads",
+  uploadRoutes
+);
+
+// ========================================
+// 🔳 QR CODES
+// ========================================
+
+app.use(
+  "/api/qr",
+  qrRoutes
+);
+
+// ========================================
+// 🏢 AGENCIES
+// ========================================
+
+app.use(
+  "/api/agency",
+  agencyRoutes
+);
+
+
+
+
+// ========================================
+// TEST API
+// ========================================
+
+app.get(
+  "/api",
+  (req, res) => {
+    res.json({
+      success: true,
+      message:
+        "🌍 Travel Platform API fonctionne correctement",
+    });
+  }
+);
+
+// ========================================
+// 404
+// ========================================
+
+app.use(
+  (req, res) => {
+    res.status(404).json({
+      success: false,
+      message:
+        `Route introuvable : ${req.method} ${req.originalUrl}`,
+    });
+  }
+);
+
+// ========================================
+// EXPORT
+// ========================================
 
 export default app;

@@ -1,22 +1,69 @@
 import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-export const authMiddleware = (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
   try {
+
+    // ==========================================
+    // RÉCUPÉRER LE TOKEN
+    // ==========================================
+
     const authHeader = req.headers.authorization;
 
-    const token = authHeader?.split(" ")[1];
-
-    if (!token) {
-      return res.status(401).json({ message: "No token" });
+    if (
+      !authHeader ||
+      !authHeader.startsWith("Bearer ")
+    ) {
+      return res.status(401).json({
+        success: false,
+        message: "Token manquant",
+      });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const token = authHeader.split(" ")[1];
 
-    req.user = decoded;
+    // ==========================================
+    // VÉRIFIER LE TOKEN
+    // ==========================================
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
+    // ==========================================
+    // RÉCUPÉRER L'UTILISATEUR
+    // ==========================================
+
+    const user = await User.findById(
+      decoded.id
+    ).select("-password");
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Utilisateur non trouvé",
+      });
+    }
+
+    // ==========================================
+    // AJOUTER USER À LA REQUÊTE
+    // ==========================================
+
+    req.user = user;
 
     next();
 
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid or expired token" });
+  } catch (error) {
+
+    console.error(
+      "❌ AUTH ERROR:",
+      error.message
+    );
+
+    return res.status(401).json({
+      success: false,
+      message: "Utilisateur non authentifié",
+    });
   }
 };

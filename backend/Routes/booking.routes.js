@@ -1,29 +1,85 @@
 import express from "express";
+
 import {
   createBooking,
   createCheckout,
   getBookings,
   getMyBookings,
-  checkInBooking
+  checkInBooking,
+  markBookingAsViewed,
 } from "../controllers/booking.controller.js";
 
 import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { adminMiddleware } from "../middlewares/adminMiddleware.js";
 
 const router = express.Router();
 
-// CREATE BOOKING
-router.post("/", authMiddleware, createBooking);
+// =====================================================
+// CLIENT : CRÉER UNE RÉSERVATION
+// POST /api/bookings
+// =====================================================
 
-// STRIPE CHECKOUT
-router.post("/checkout", authMiddleware, createCheckout);
+router.post(
+  "/",
+  authMiddleware,
+  createBooking
+);
 
-// GET ALL BOOKINGS
-router.get("/", authMiddleware, getBookings);
+// =====================================================
+// CLIENT : PAIEMENT STRIPE
+// POST /api/bookings/checkout
+// =====================================================
 
-// MY BOOKINGS
-router.get("/my", authMiddleware, getMyBookings);
+router.post(
+  "/checkout",
+  authMiddleware,
+  createCheckout
+);
 
-// CHECK-IN QR
-router.post("/checkin", authMiddleware, checkInBooking);
+// =====================================================
+// CLIENT : MES RÉSERVATIONS
+// GET /api/bookings/my
+// =====================================================
+
+router.get(
+  "/my",
+  authMiddleware,
+  getMyBookings
+);
+
+// =====================================================
+// ADMIN : TOUTES LES RÉSERVATIONS
+// GET /api/bookings
+// =====================================================
+
+router.get(
+  "/",
+  authMiddleware,
+  adminMiddleware,
+  getBookings
+);
+
+// =====================================================
+// ADMIN : MARQUER COMME VUE
+// PUT /api/bookings/:id/viewed
+// =====================================================
+
+router.put(
+  "/:id/viewed",
+  authMiddleware,
+  adminMiddleware,
+  markBookingAsViewed
+);
+
+// =====================================================
+// CHECK-IN
+// POST /api/bookings/checkin
+// =====================================================
+
+router.post(
+  "/checkin",
+  authMiddleware,
+  checkInBooking
+);
 
 export default router;

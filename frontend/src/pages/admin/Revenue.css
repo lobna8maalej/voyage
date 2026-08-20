@@ -1,0 +1,460 @@
+/* =========================================================
+   REVENUE PAGE
+========================================================= */
+
+.revenue-page {
+  min-height: calc(100vh - 70px);
+
+  background: #f5f7fb;
+
+  padding: 30px 40px;
+
+  color: #1e293b;
+
+  font-family:
+    "Inter",
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.revenue-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  background: #ffffff;
+
+  border: 1px solid #e6ebf2;
+
+  border-radius: 16px;
+
+  padding: 22px 26px;
+
+  margin-bottom: 25px;
+
+  box-shadow:
+    0 4px 18px
+    rgba(15, 23, 42, 0.05);
+}
+
+
+.revenue-header h1 {
+  margin: 0;
+
+  font-size: 28px;
+
+  font-weight: 750;
+
+  color: #172033;
+}
+
+
+.revenue-header p {
+  margin: 7px 0 0;
+
+  color: #718096;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.refresh-button {
+  border: none;
+
+  border-radius: 9px;
+
+  background: #2563eb;
+
+  color: white;
+
+  padding: 10px 17px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    0.2s ease;
+}
+
+
+.refresh-button:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 7px 18px
+    rgba(37, 99, 235, 0.25);
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.revenue-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 16px;
+
+  margin-bottom: 28px;
+}
+
+
+.revenue-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  background: #ffffff;
+
+  border: 1px solid #e6ebf2;
+
+  border-radius: 13px;
+
+  padding: 18px;
+
+  box-shadow:
+    0 3px 14px
+    rgba(15, 23, 42, 0.05);
+
+  transition:
+    0.2s ease;
+}
+
+
+.revenue-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 8px 22px
+    rgba(15, 23, 42, 0.09);
+}
+
+
+.revenue-icon {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 40px;
+
+  height: 40px;
+
+  border-radius: 10px;
+
+  background: #eff6ff;
+
+  font-size: 20px;
+}
+
+
+.revenue-card strong {
+  display: block;
+
+  font-size: 24px;
+
+  color: #172033;
+}
+
+
+.revenue-card p {
+  margin: 4px 0 0;
+
+  font-size: 12px;
+
+  color: #64748b;
+}
+
+
+/* =========================================================
+   PAYMENTS SECTION
+========================================================= */
+
+.payments-section {
+  background: #ffffff;
+
+  border: 1px solid #e6ebf2;
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 5px 22px
+    rgba(15, 23, 42, 0.06);
+}
+
+
+.section-header {
+  padding: 20px 22px;
+
+  border-bottom:
+    1px solid #edf1f5;
+}
+
+
+.section-header h2 {
+  margin: 0;
+
+  font-size: 20px;
+
+  color: #172033;
+}
+
+
+.section-header p {
+  margin: 5px 0 0;
+
+  font-size: 13px;
+
+  color: #718096;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.payments-table-container {
+  overflow-x: auto;
+}
+
+
+.payments-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 700px;
+}
+
+
+.payments-table thead {
+  background: #f8fafc;
+}
+
+
+.payments-table th {
+  padding: 14px 18px;
+
+  text-align: left;
+
+  color: #475569;
+
+  font-size: 11px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.5px;
+
+  border-bottom:
+    1px solid #e2e8f0;
+}
+
+
+.payments-table td {
+  padding: 15px 18px;
+
+  border-bottom:
+    1px solid #edf1f5;
+
+  color: #475569;
+
+  font-size: 13px;
+}
+
+
+.payments-table tbody tr:hover {
+  background: #f8fbff;
+}
+
+
+.payments-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+.payments-table td strong {
+  color: #1e293b;
+}
+
+
+.payments-table .amount {
+  color: #2563eb;
+
+  font-size: 15px;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.payment-status {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-transform: capitalize;
+}
+
+
+/* Paiement réussi */
+
+.payment-status.succeeded,
+.payment-status.paid {
+  background: #ecfdf5;
+
+  color: #047857;
+
+  border: 1px solid #a7f3d0;
+}
+
+
+/* Paiement en attente */
+
+.payment-status.pending {
+  background: #fff7ed;
+
+  color: #c2410c;
+
+  border: 1px solid #fed7aa;
+}
+
+
+/* Paiement échoué */
+
+.payment-status.failed {
+  background: #fef2f2;
+
+  color: #dc2626;
+
+  border: 1px solid #fecaca;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-payments {
+  padding: 60px 20px;
+
+  text-align: center;
+}
+
+
+.empty-payments > div {
+  font-size: 38px;
+
+  margin-bottom: 10px;
+}
+
+
+.empty-payments h3 {
+  margin: 0 0 6px;
+
+  color: #334155;
+}
+
+
+.empty-payments p {
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.revenue-error {
+  background: #fef2f2;
+
+  border: 1px solid #fecaca;
+
+  color: #b91c1c;
+
+  border-radius: 10px;
+
+  padding: 15px;
+
+  margin-bottom: 15px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .revenue-page {
+    padding: 25px 20px;
+  }
+
+  .revenue-stats {
+    grid-template-columns:
+      1fr;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .revenue-page {
+    padding: 18px 12px;
+  }
+
+  .revenue-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .revenue-header h1 {
+    font-size: 23px;
+  }
+
+}

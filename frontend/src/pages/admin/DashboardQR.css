@@ -1,0 +1,681 @@
+/* =====================================================
+   DASHBOARD QR
+===================================================== */
+
+.dashboard-qr {
+  min-height: 100vh;
+  padding: 40px 35px 60px;
+  background:
+    linear-gradient(
+      135deg,
+      #f8fafc 0%,
+      #eef4ff 100%
+    );
+  box-sizing: border-box;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.dashboard-qr-header {
+  max-width: 1150px;
+  margin: 0 auto 32px;
+}
+
+.dashboard-qr-header h1 {
+  margin: 0 0 8px;
+
+  color: #0f172a;
+
+  font-size: 30px;
+  font-weight: 800;
+
+  letter-spacing: -0.6px;
+}
+
+.dashboard-qr-header p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+/* =====================================================
+   VERIFY CARD
+===================================================== */
+
+.qr-verify-card {
+  position: relative;
+
+  max-width: 1150px;
+  margin: 0 auto;
+
+  padding: 34px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+
+  box-shadow:
+    0 10px 35px rgba(15, 23, 42, 0.07),
+    0 2px 8px rgba(15, 23, 42, 0.04);
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* petite décoration */
+
+.qr-verify-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 4px;
+
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #4f46e5,
+    #7c3aed
+  );
+}
+
+
+/* =====================================================
+   VERIFY TITLE
+===================================================== */
+
+.qr-verify-card h2 {
+  margin: 0 0 8px;
+
+  color: #0f172a;
+
+  font-size: 21px;
+  font-weight: 750;
+}
+
+.qr-verify-card > p {
+  margin: 0 0 28px;
+
+  color: #64748b;
+
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+
+/* =====================================================
+   INPUT GROUP
+===================================================== */
+
+.qr-input-group {
+  display: flex;
+  flex-direction: column;
+
+  gap: 9px;
+
+  margin-bottom: 24px;
+}
+
+.qr-input-group label {
+  color: #334155;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   INPUT
+===================================================== */
+
+.qr-input-group input {
+  width: 100%;
+  height: 52px;
+
+  padding: 0 17px;
+
+  box-sizing: border-box;
+
+  background: #f8fafc;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 11px;
+
+  color: #0f172a;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.qr-input-group input::placeholder {
+  color: #94a3b8;
+}
+
+.qr-input-group input:hover {
+  border-color: #94a3b8;
+  background: #ffffff;
+}
+
+.qr-input-group input:focus {
+  border-color: #2563eb;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 4px rgba(37, 99, 235, 0.10);
+
+  transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.qr-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+/* =====================================================
+   VERIFY BUTTON
+===================================================== */
+
+.verify-qr-btn {
+  min-height: 46px;
+
+  padding: 0 22px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #4f46e5
+  );
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 14px rgba(37, 99, 235, 0.20);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.verify-qr-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 9px 20px rgba(37, 99, 235, 0.28);
+}
+
+.verify-qr-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.verify-qr-btn:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+}
+
+
+/* =====================================================
+   RESET BUTTON
+===================================================== */
+
+.reset-qr-btn {
+  min-height: 46px;
+
+  padding: 0 22px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #475569;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.reset-qr-btn:hover {
+  background: #f8fafc;
+
+  border-color: #94a3b8;
+
+  color: #0f172a;
+
+  transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.qr-error {
+  display: flex;
+
+  align-items: center;
+
+  margin-top: 22px;
+
+  padding: 14px 17px;
+
+  background: #fff1f2;
+
+  border: 1px solid #fecdd3;
+
+  border-left: 4px solid #ef4444;
+
+  border-radius: 10px;
+
+  color: #be123c;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  line-height: 1.5;
+}
+
+
+/* =====================================================
+   RESULT CARD
+===================================================== */
+
+.qr-result-card {
+  max-width: 1150px;
+
+  margin: 26px auto 0;
+
+  padding: 30px 34px;
+
+  background: #ffffff;
+
+  border: 1px solid #dbeafe;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.07);
+
+  box-sizing: border-box;
+
+  animation: qrResultAppear 0.35s ease;
+}
+
+
+@keyframes qrResultAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =====================================================
+   RESULT HEADER
+===================================================== */
+
+.qr-result-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.qr-result-header h2 {
+  margin: 0;
+
+  color: #15803d;
+
+  font-size: 21px;
+  font-weight: 800;
+}
+
+
+/* =====================================================
+   RESULT MESSAGE
+===================================================== */
+
+.qr-result-message {
+  margin: 18px 0;
+
+  padding: 14px 16px;
+
+  background: #f0fdf4;
+
+  border: 1px solid #bbf7d0;
+
+  border-radius: 10px;
+
+  color: #166534;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+
+/* =====================================================
+   BOOKING INFORMATION
+===================================================== */
+
+.qr-booking-info {
+  margin-top: 24px;
+}
+
+.qr-booking-info h3,
+.qr-payment-info h3 {
+  margin: 0 0 16px;
+
+  color: #1e293b;
+
+  font-size: 17px;
+  font-weight: 750;
+}
+
+
+/* =====================================================
+   INFO GRID
+===================================================== */
+
+.qr-info-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 14px;
+
+  padding: 20px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 13px;
+}
+
+
+/* =====================================================
+   INFO ITEM
+===================================================== */
+
+.qr-info-grid > div {
+  min-height: 70px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 13px 15px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.qr-info-grid > div:hover {
+  border-color: #bfdbfe;
+
+  box-shadow:
+    0 4px 12px rgba(37, 99, 235, 0.07);
+
+  transform: translateY(-1px);
+}
+
+
+.qr-info-grid strong {
+  color: #64748b;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.4px;
+
+  text-transform: uppercase;
+}
+
+
+.qr-info-grid span {
+  color: #0f172a;
+
+  font-size: 14px;
+
+  font-weight: 650;
+
+  line-height: 1.4;
+
+  word-break: break-word;
+}
+
+
+/* =====================================================
+   PAYMENT
+===================================================== */
+
+.qr-payment-info {
+  margin-top: 20px;
+
+  padding: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f0fdf4,
+      #ecfdf5
+    );
+
+  border: 1px solid #bbf7d0;
+
+  border-radius: 13px;
+
+  color: #166534;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+.qr-payment-info h3 {
+  color: #166534;
+
+  margin-bottom: 10px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 800px) {
+
+  .dashboard-qr {
+    padding: 30px 20px 45px;
+  }
+
+  .dashboard-qr-header h1 {
+    font-size: 27px;
+  }
+
+  .qr-verify-card,
+  .qr-result-card {
+    padding: 28px;
+  }
+
+  .qr-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .dashboard-qr {
+    padding: 22px 14px 35px;
+  }
+
+  .dashboard-qr-header {
+    margin-bottom: 22px;
+  }
+
+  .dashboard-qr-header h1 {
+    font-size: 23px;
+  }
+
+  .dashboard-qr-header p {
+    font-size: 13px;
+  }
+
+  .qr-verify-card,
+  .qr-result-card {
+    padding: 22px 18px;
+
+    border-radius: 15px;
+  }
+
+  .qr-verify-card h2 {
+    font-size: 18px;
+  }
+
+  .qr-verify-card > p {
+    font-size: 13px;
+  }
+
+  .qr-input-group input {
+    height: 50px;
+  }
+
+  .qr-actions {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 10px;
+  }
+
+  .verify-qr-btn,
+  .reset-qr-btn {
+    width: 100%;
+  }
+
+  .qr-result-header h2 {
+    font-size: 18px;
+  }
+
+  .qr-info-grid {
+    padding: 12px;
+
+    gap: 10px;
+  }
+
+  .qr-info-grid > div {
+    min-height: 65px;
+
+    padding: 12px;
+  }
+
+}
+
+
+/* =====================================================
+   VERY SMALL MOBILE
+===================================================== */
+
+@media (max-width: 400px) {
+
+  .dashboard-qr {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .qr-verify-card,
+  .qr-result-card {
+    padding: 18px 14px;
+  }
+
+  .dashboard-qr-header h1 {
+    font-size: 21px;
+  }
+
+  .qr-input-group input {
+    font-size: 13px;
+  }
+
+}

@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import crypto from "crypto";
 
-import Booking from "../models/Booking.js";
+import Booking from "../Models/Booking.js";
 
 import Hotel from "../models/Hotel.js";
 import Agency from "../models/Agency.js";
@@ -10,558 +10,803 @@ import Circuit from "../models/Circuit.js";
 import { sendBookingEmail } from "../services/mail.service.js";
 import { sendWhatsAppMessage } from "../services/twilio.service.js";
 
-
 const stripe = new Stripe(
   process.env.STRIPE_SECRET_KEY
 );
 
 
-
-//
+// =====================================================
 // CREATE BOOKING
-//
+// POST /api/bookings
+// =====================================================
+
 export const createBooking = async (req, res) => {
 
-try {
+  try {
 
-const {
-  serviceId,
-  serviceType,
-  persons
-} = req.body;
+    // ==========================================
+    // DONNÉES DU FORMULAIRE
+    // ==========================================
 
-
-let Model = null;
-
-
-switch(serviceType){
-
-  case "Hotel":
-    Model = Hotel;
-    break;
+    const {
+      serviceId,
+      serviceType,
+      persons,
+      checkIn,
+      checkOut,
+      message,
+    } = req.body;
 
 
-  case "Agency":
-    Model = Agency;
-    break;
+    // ==========================================
+    // CHOIX DU MODEL
+    // ==========================================
+
+    let Model = null;
+
+    switch (serviceType) {
+
+      case "Hotel":
+        Model = Hotel;
+        break;
+
+      case "Agency":
+        Model = Agency;
+        break;
+
+      case "Circuit":
+        Model = Circuit;
+        break;
+
+      default:
+
+        return res.status(400).json({
+          success: false,
+          message: "Invalid service type",
+        });
+    }
 
 
-  case "Circuit":
-    Model = Circuit;
-    break;
+    // ==========================================
+    // RÉCUPÉRER LE SERVICE
+    // ==========================================
+
+    const service =
+      await Model.findById(serviceId);
 
 
-  default:
-    return res.status(400).json({
-      message:"Invalid service type"
+    if (!service) {
+
+      return res.status(404).json({
+        success: false,
+        message: "Service not found",
+      });
+    }
+
+
+    // ==========================================
+    // VÉRIFIER LE PRIX
+    // ==========================================
+
+    const price =
+      Number(service.price);
+
+
+    if (isNaN(price)) {
+
+      return res.status(400).json({
+
+        success: false,
+
+        message:
+          "Le service ne contient pas de prix valide",
+
+        service,
+      });
+    }
+
+
+    // ==========================================
+    // NOMBRE DE PERSONNES
+    // ==========================================
+
+    const numberOfPersons =
+      Number(persons) || 1;
+
+
+    // ==========================================
+    // CRÉER LA RÉSERVATION
+    // ==========================================
+
+    const booking =
+      await Booking.create({
+
+        // CLIENT CONNECTÉ
+        user: req.user.id,
+
+        // SERVICE
+        service: serviceId,
+
+        serviceType,
+
+        // INFORMATIONS RÉSERVATION
+        persons: numberOfPersons,
+
+        checkIn:
+          checkIn || null,
+
+        checkOut:
+          checkOut || null,
+
+        message:
+          message || "",
+
+        // PRIX
+        totalPrice:
+          price * numberOfPersons,
+
+        // STATUT
+        status: "pending",
+
+        // PAIEMENT
+        paymentStatus: "unpaid",
+
+        // ADMIN
+        adminViewed: false,
+
+        // QR CODE
+        qrToken:
+          crypto.randomUUID(),
+      });
+
+
+    // ==========================================
+    // RÉPONSE
+    // ==========================================
+
+    return res.status(201).json({
+
+      success: true,
+
+      message:
+        "Réservation créée avec succès",
+
+      booking,
     });
 
-}
 
+  } catch (error) {
 
+    console.error(
+      "❌ CREATE BOOKING ERROR:",
+      error
+    );
 
-const service = await Model.findById(serviceId);
+    return res.status(500).json({
 
+      success: false,
 
-
-if(!service){
-
- return res.status(404).json({
-   message:"Service not found"
- });
-
-}
-
-
-
-const price = Number(service.price);
-
-if (isNaN(price)) {
-  return res.status(400).json({
-    message: "Le service ne contient pas de prix valide",
-    service
-  });
-}
-
-const booking = await Booking.create({
-
-  user: req.user.id,
-
-  service: serviceId,
-
-  serviceType,
-
-  persons: Number(persons) || 1,
-
-  totalPrice: price * (Number(persons) || 1),
-
-  status: "pending",
-
-  paymentStatus: "unpaid",
-
-  qrToken: crypto.randomUUID()
-
-});
-
-
-
-return res.status(201).json({
- success:true,
- booking
-});
-
-
-}
-catch(error){
-
-return res.status(500).json({
- message:error.message
-});
-
-}
-
-};
-
-export const getBookings = async(req,res)=>{
-
-try{
-
-
-const bookings =
-await Booking.find()
-
-.populate("service")
-
-.populate(
-"user",
-"name email"
-);
-
-
-
-res.json(bookings);
-
-
-
-}catch(error){
-
-res.status(500).json({
-message:error.message
-});
-
-}
-
-};
-
-export const getMyBookings = async(req,res)=>{
-
-try{
-
-
-const bookings =
-await Booking.find({
-user:req.user.id
-})
-
-.populate("service")
-
-.populate(
-"user",
-"name email"
-);
-
-
-
-res.json(bookings);
-
-
-
-}catch(error){
-
-res.status(500).json({
-message:error.message
-});
-
-}
-
-};
-
-export const checkInBooking = async(req,res)=>{
-
-
-try{
-
-
-const {
-qrToken
-}=req.body;
-
-
-
-const booking =
-await Booking.findOne({
-qrToken
-})
-.populate("service");
-
-
-
-if(!booking){
-
-return res.status(404).json({
-message:"Invalid QR"
-});
-
-}
-
-
-
-if(
-booking.paymentStatus!=="paid"
-){
-
-return res.status(403).json({
-message:"Payment required"
-});
-
-}
-
-booking.status="checked-in";
-
-
-await booking.save();
-
-
-
-res.json({
-success:true,
-booking
-});
-
-
-
-}catch(error){
-
-res.status(500).json({
-message:error.message
-});
-
-}
-
-};
-export const createCheckout = async(req,res)=>{
-
-
-try{
-
-
-const {
-bookingId
-}=req.body;
-
-
-
-const booking =
-await Booking.findById(bookingId)
-.populate("service");
-
-
-
-if(!booking){
-
-return res.status(404).json({
-message:"Booking not found"
-});
-
-}
-
-
-
-
-const service =
-booking.service;
-
-
-
-const session =
-await stripe.checkout.sessions.create({
-
-
-payment_method_types:[
-"card"
-],
-
-
-mode:"payment",
-
-
-customer_email:
-req.user.email,
-
-
-
-line_items:[
-
-{
-
-price_data:{
-
-
-currency:"eur",
-
-
-product_data:{
-
-
-name:
-service.name,
-
-
-description:
-service.description || ""
-
-},
-
-
-unit_amount:
-Math.round(
- Number(booking.totalPrice) * 100
-)
-
-
-},
-
-
-quantity:1
-
-
-}
-
-],
-
-
-
-metadata:{
-
-
-bookingId:
-booking._id.toString()
-
-
-},
-
-
-
-success_url:
-`${process.env.FRONTEND_URL}/payment-success?bookingId=${booking._id}`,
-
-
-
-cancel_url:
-`${process.env.FRONTEND_URL}/payment-cancel`
-
-
-
-});
-
-
-
-res.json({
-url:session.url
-});
-
-
-
-}catch(error){
-
-res.status(500).json({
-message:error.message
-});
-
-}
-
+      message: error.message,
+    });
+  }
 };
 
 
+// =====================================================
+// ADMIN : TOUTES LES RÉSERVATIONS
+// GET /api/bookings
+// =====================================================
+
+export const getBookings = async (req, res) => {
+
+  try {
+
+    const bookings =
+      await Booking.find()
+
+        .populate("service")
+
+        .populate(
+          "user",
+          "name email phone"
+        )
+
+        .sort({
+          createdAt: -1,
+        });
 
 
+    return res.json({
+
+      success: true,
+
+      data: bookings,
+    });
 
 
+  } catch (error) {
 
-//
+    console.error(
+      "❌ GET BOOKINGS ERROR:",
+      error
+    );
+
+    return res.status(500).json({
+
+      success: false,
+
+      message: error.message,
+    });
+  }
+};
+
+
+// =====================================================
+// CLIENT : MES RÉSERVATIONS
+// GET /api/bookings/my
+// =====================================================
+
+export const getMyBookings = async (
+  req,
+  res
+) => {
+
+  try {
+
+    const bookings =
+      await Booking.find({
+        user: req.user.id,
+      })
+
+        .populate("service")
+
+        .populate(
+          "user",
+          "name email phone"
+        )
+
+        .sort({
+          createdAt: -1,
+        });
+
+
+    return res.json({
+
+      success: true,
+
+      data: bookings,
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      "❌ GET MY BOOKINGS ERROR:",
+      error
+    );
+
+    return res.status(500).json({
+
+      success: false,
+
+      message: error.message,
+    });
+  }
+};
+
+
+// =====================================================
+// CHECK-IN QR
+// POST /api/bookings/checkin
+// =====================================================
+
+export const checkInBooking = async (
+  req,
+  res
+) => {
+
+  try {
+
+    const {
+      qrToken,
+    } = req.body;
+
+
+    const booking =
+      await Booking.findOne({
+        qrToken,
+      })
+
+        .populate("service")
+
+        .populate(
+          "user",
+          "name email phone"
+        );
+
+
+    if (!booking) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message: "Invalid QR",
+      });
+    }
+
+
+    // ==========================================
+    // VÉRIFIER LE PAIEMENT
+    // ==========================================
+
+    if (
+      booking.paymentStatus !== "paid"
+    ) {
+
+      return res.status(403).json({
+
+        success: false,
+
+        message: "Payment required",
+      });
+    }
+
+
+    // ==========================================
+    // CHECK-IN
+    // ==========================================
+
+    booking.status =
+      "checked-in";
+
+
+    await booking.save();
+
+
+    return res.json({
+
+      success: true,
+
+      message:
+        "Check-in effectué avec succès",
+
+      booking,
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      "❌ CHECK-IN ERROR:",
+      error
+    );
+
+    return res.status(500).json({
+
+      success: false,
+
+      message: error.message,
+    });
+  }
+};
+
+
+// =====================================================
+// STRIPE CHECKOUT
+// POST /api/bookings/checkout
+// =====================================================
+
+export const createCheckout = async (
+  req,
+  res
+) => {
+
+  try {
+
+    const {
+      bookingId,
+    } = req.body;
+
+
+    // ==========================================
+    // RÉCUPÉRER LA RÉSERVATION
+    // ==========================================
+
+    const booking =
+      await Booking.findById(
+        bookingId
+      )
+        .populate("service");
+
+
+    if (!booking) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message:
+          "Booking not found",
+      });
+    }
+
+
+    // ==========================================
+    // VÉRIFIER QUE LA RÉSERVATION APPARTIENT
+    // AU CLIENT CONNECTÉ
+    // ==========================================
+
+    if (
+      booking.user.toString() !==
+      req.user.id.toString()
+    ) {
+
+      return res.status(403).json({
+
+        success: false,
+
+        message:
+          "Accès refusé à cette réservation",
+      });
+    }
+
+
+    const service =
+      booking.service;
+
+
+    // ==========================================
+    // STRIPE
+    // ==========================================
+
+    const session =
+      await stripe.checkout.sessions.create({
+
+        payment_method_types: [
+          "card",
+        ],
+
+        mode: "payment",
+
+        customer_email:
+          req.user.email,
+
+        line_items: [
+
+          {
+
+            price_data: {
+
+              currency: "eur",
+
+              product_data: {
+
+                name:
+                  service.name,
+
+                description:
+                  service.description || "",
+              },
+
+              unit_amount:
+                Math.round(
+                  Number(
+                    booking.totalPrice
+                  ) * 100
+                ),
+            },
+
+            quantity: 1,
+          },
+        ],
+
+
+        // ==================================
+        // METADATA
+        // ==================================
+
+        metadata: {
+
+          bookingId:
+            booking._id.toString(),
+        },
+
+
+        // ==================================
+        // URLS
+        // ==================================
+
+        success_url:
+          `${process.env.FRONTEND_URL}/payment-success?bookingId=${booking._id}`,
+
+        cancel_url:
+          `${process.env.FRONTEND_URL}/payment-cancel`,
+      });
+
+
+    return res.json({
+
+      success: true,
+
+      url: session.url,
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      "❌ STRIPE CHECKOUT ERROR:",
+      error
+    );
+
+    return res.status(500).json({
+
+      success: false,
+
+      message: error.message,
+    });
+  }
+};
+
+
+// =====================================================
 // STRIPE WEBHOOK
-//
-export const stripeWebhook = async(req,res)=>{
+// =====================================================
 
+export const stripeWebhook = async (
+  req,
+  res
+) => {
 
-const sig =
-req.headers["stripe-signature"];
+  const sig =
+    req.headers[
+      "stripe-signature"
+    ];
 
 
-let event;
+  let event;
 
 
+  // ==========================================
+  // VÉRIFICATION STRIPE
+  // ==========================================
 
-try{
+  try {
 
+    event =
+      stripe.webhooks.constructEvent(
 
-event =
-stripe.webhooks.constructEvent(
+        req.body,
 
-req.body,
+        sig,
 
-sig,
+        process.env
+          .STRIPE_WEBHOOK_SECRET
+      );
 
-process.env.STRIPE_WEBHOOK_SECRET
+  } catch (error) {
 
-);
+    return res.status(400).send(
+      `Webhook Error: ${error.message}`
+    );
+  }
 
 
+  try {
 
-}catch(error){
+    // ========================================
+    // PAIEMENT TERMINÉ
+    // ========================================
 
+    if (
+      event.type ===
+      "checkout.session.completed"
+    ) {
 
-return res.status(400).send(
-`Webhook Error: ${error.message}`
-);
+      const session =
+        event.data.object;
 
 
-}
+      const bookingId =
+        session.metadata.bookingId;
 
 
+      // ======================================
+      // METTRE À JOUR LA RÉSERVATION
+      // ======================================
 
-try{
+      const booking =
+        await Booking.findByIdAndUpdate(
 
+          bookingId,
 
-if(
-event.type==="checkout.session.completed"
-){
+          {
 
+            paymentStatus: "paid",
 
-const session =
-event.data.object;
+            status: "confirmed",
 
+            stripeSessionId:
+              session.id,
+          },
 
+          {
+            new: true,
+          }
 
-const bookingId =
-session.metadata.bookingId;
+        )
 
+          .populate("service")
 
+          .populate(
+            "user",
+            "name email phone"
+          );
 
-const booking =
-await Booking.findByIdAndUpdate(
 
-bookingId,
+      if (!booking) {
 
+        return res.status(404).json({
 
-{
+          success: false,
 
-paymentStatus:"paid",
+          message:
+            "Booking not found",
+        });
+      }
 
-status:"confirmed",
 
-stripeSessionId:
-session.id
+      // ======================================
+      // EMAIL
+      // ======================================
 
-},
+      try {
 
+        await sendBookingEmail(
+          booking
+        );
 
-{
-new:true
-}
+      } catch (e) {
 
-)
-.populate("service");
+        console.log(
+          "Email error",
+          e.message
+        );
+      }
 
 
+      // ======================================
+      // WHATSAPP
+      // ======================================
 
+      try {
 
-if(!booking){
+        if (
+          booking.service?.phone
+        ) {
 
-return res.status(404).json({
-message:"Booking not found"
-});
+          await sendWhatsAppMessage(
 
-}
+            booking.service.phone,
 
+            `Booking confirmed : ${booking.service.name}`
+          );
+        }
 
+      } catch (e) {
 
-try{
+        console.log(
+          "WhatsApp error",
+          e.message
+        );
+      }
 
-await sendBookingEmail(
-booking
-);
 
+      console.log(
+        "✅ BOOKING PAID",
+        booking._id
+      );
+    }
 
-}catch(e){
 
-console.log(
-"Email error",
-e.message
-);
+    return res.json({
+      received: true,
+    });
 
-}
 
+  } catch (error) {
 
+    console.error(
+      "❌ STRIPE WEBHOOK ERROR:",
+      error
+    );
 
+    return res.status(500).json({
 
-try{
+      success: false,
 
+      message: error.message,
+    });
+  }
+};
 
-if(
-booking.service?.phone
-){
 
+// =====================================================
+// ADMIN : MARQUER UNE RÉSERVATION COMME VUE
+// PUT /api/bookings/:id/viewed
+// =====================================================
 
-await sendWhatsAppMessage(
+export const markBookingAsViewed = async (
+  req,
+  res
+) => {
 
-booking.service.phone,
+  try {
 
+    const {
+      id,
+    } = req.params;
 
-`Booking confirmed : ${booking.service.name}`
 
-);
+    const booking =
+      await Booking.findByIdAndUpdate(
 
+        id,
 
-}
+        {
+          adminViewed: true,
+        },
 
+        {
+          new: true,
+        }
 
+      )
 
-}catch(e){
+        .populate("service")
 
-console.log(
-"WhatsApp error",
-e.message
-);
+        .populate(
+          "user",
+          "name email phone"
+        );
 
-}
 
+    if (!booking) {
 
+      return res.status(404).json({
 
-console.log(
-"✅ BOOKING PAID",
-booking._id
-);
+        success: false,
 
+        message:
+          "Réservation introuvable",
+      });
+    }
 
 
-}
+    return res.json({
 
+      success: true,
 
+      message:
+        "Réservation marquée comme vue",
 
+      booking,
+    });
 
-res.json({
-received:true
-});
 
+  } catch (error) {
 
+    console.error(
+      "❌ MARK BOOKING VIEWED ERROR:",
+      error
+    );
 
-}catch(error){
+    return res.status(500).json({
 
-res.status(500).json({
-message:error.message
-});
+      success: false,
 
-}
-
+      message: error.message,
+    });
+  }
 };

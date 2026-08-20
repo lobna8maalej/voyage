@@ -1,313 +1,795 @@
-/* =====================================
-   PAGE
-===================================== */
+/* =====================================================
+   PAGE PRINCIPALE
+===================================================== */
 
-.availability-page{
-    min-height:100vh;
-    padding:40px 20px;
-    background:linear-gradient(135deg,#eef7ff 0%,#f6fbff 40%,#e9fff7 100%);
+.availability-page {
+  min-height: 100vh;
+  background: #f5f7fa;
+  padding: 40px 20px 70px;
+  box-sizing: border-box;
+  color: #222;
 }
 
-.availability-card{
-    max-width:1100px;
-    margin:auto;
-    background:white;
-    border-radius:22px;
-    overflow:hidden;
-    box-shadow:0 20px 50px rgba(0,0,0,.12);
+/* =====================================================
+   HEADER
+===================================================== */
+
+.availability-header {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 25px;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-/* =====================================
+.availability-header h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.back-btn {
+  border: none;
+  background: #ffffff;
+  color: #374151;
+
+  padding: 11px 18px;
+  border-radius: 10px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+
+  transition: all 0.25s ease;
+}
+
+.back-btn:hover {
+  background: #111827;
+  color: #ffffff;
+  transform: translateX(-3px);
+}
+
+/* =====================================================
+   CARTE PRINCIPALE
+===================================================== */
+
+.availability-card {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  background: #ffffff;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+/* =====================================================
    CAROUSEL
-===================================== */
+===================================================== */
 
-.carousel{
-    position:relative;
+.carousel {
+  position: relative;
+
+  width: 100%;
+  height: 480px;
+
+  background: #e5e7eb;
+
+  overflow: hidden;
 }
 
-.carousel img{
-    width:100%;
-    height:430px;
-    object-fit:cover;
+.carousel img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  transition: opacity 0.3s ease;
 }
 
-.carousel-btn{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    width:55px;
-    height:55px;
-    border:none;
-    border-radius:50%;
-    background:rgba(255,255,255,.75);
-    color:#006ce4;
-    font-size:28px;
-    cursor:pointer;
-    transition:.3s;
-    backdrop-filter:blur(6px);
+/* =====================================================
+   BOUTONS CAROUSEL
+===================================================== */
+
+.carousel-btn {
+  position: absolute;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 45px;
+  height: 45px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  color: #ffffff;
+
+  font-size: 24px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.25s ease;
+
+  z-index: 5;
 }
 
-.carousel-btn:hover{
-    background:#006ce4;
-    color:white;
-    transform:translateY(-50%) scale(1.08);
+.carousel-btn:hover {
+  background: rgba(0, 0, 0, 0.85);
+
+  transform:
+    translateY(-50%)
+    scale(1.08);
 }
 
-.left{
-    left:20px;
+.carousel-btn.left {
+  left: 20px;
 }
 
-.right{
-    right:20px;
+.carousel-btn.right {
+  right: 20px;
 }
 
-/* =====================================
-   CONTENT
-===================================== */
+/* =====================================================
+   CONTENU
+===================================================== */
 
-.availability-content{
-    padding:35px;
+.availability-content {
+  padding: 35px;
 }
 
-.availability-title{
-    font-size:36px;
-    color:#163b65;
-    margin-bottom:10px;
+.availability-title {
+  margin: 0 0 10px;
+
+  font-size: 32px;
+
+  color: #111827;
+
+  font-weight: 700;
 }
 
-.availability-location{
-    color:#777;
-    font-size:17px;
+.availability-content > p {
+  color: #6b7280;
+
+  font-size: 16px;
+
+  margin: 8px 0;
 }
 
-.availability-price{
-    display:inline-block;
-    margin-top:20px;
-    padding:14px 24px;
-    background:linear-gradient(135deg,#00c06f,#00a86b);
-    color:white;
-    border-radius:30px;
-    font-size:22px;
-    font-weight:bold;
+.availability-location {
+  font-size: 16px;
+
+  color: #4b5563;
+
+  margin-bottom: 15px;
 }
 
-.price-request{
-    margin-top:20px;
-    color:#888;
-    font-size:18px;
+/* =====================================================
+   PRIX
+===================================================== */
+
+.availability-price {
+  display: inline-block;
+
+  margin: 15px 0;
+
+  padding: 12px 18px;
+
+  border-radius: 10px;
+
+  background: #fef3c7;
+
+  color: #92400e;
+
+  font-size: 18px;
+
+  font-weight: 700;
 }
 
-/* =====================================
+.price-request {
+  display: inline-block;
+
+  margin: 15px 0;
+
+  padding: 12px 18px;
+
+  border-radius: 10px;
+
+  background: #f3f4f6;
+
+  color: #4b5563;
+
+  font-size: 16px;
+
+  font-weight: 600;
+}
+
+/* =====================================================
+   RESERVATION CTA
+===================================================== */
+
+.reservation-cta {
+  margin: 30px 0;
+
+  padding: 25px;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8fafc,
+      #eef2ff
+    );
+
+  border: 1px solid #e5e7eb;
+
+  text-align: center;
+}
+
+.reservation-main-btn {
+  border: none;
+
+  padding: 15px 30px;
+
+  border-radius: 12px;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 18px
+    rgba(37, 99, 235, 0.25);
+
+  transition: all 0.25s ease;
+}
+
+.reservation-main-btn:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 9px 22px
+    rgba(37, 99, 235, 0.35);
+}
+
+.reservation-cta p {
+  margin: 12px 0 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+/* =====================================================
    TABS
-===================================== */
+===================================================== */
 
-.tabs{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-    margin:35px 0;
+.tabs {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin: 30px 0 25px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  padding-bottom: 12px;
 }
 
-.tab-btn{
-    border:none;
-    border-radius:30px;
-    padding:12px 24px;
-    background:white;
-    color:#006ce4;
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-    transition:.3s;
-    box-shadow:0 5px 15px rgba(0,108,228,.15);
+.tab-btn {
+  border: none;
+
+  background: #f3f4f6;
+
+  color: #4b5563;
+
+  padding: 11px 17px;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
 }
 
-.tab-btn:hover{
-    background:#006ce4;
-    color:white;
+.tab-btn:hover {
+  background: #e5e7eb;
+
+  color: #111827;
 }
 
-.tab-btn.active{
-    background:linear-gradient(135deg,#006ce4,#00a86b);
-    color:white;
+.tab-btn.active {
+  background: #2563eb;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 4px 12px
+    rgba(37, 99, 235, 0.2);
 }
 
-/* =====================================
-   THUMBNAILS
-===================================== */
+/* =====================================================
+   MINIATURES PHOTOS
+===================================================== */
 
-.thumbnails{
-    display:flex;
-    gap:12px;
-    overflow-x:auto;
-    padding-bottom:12px;
+.thumbnails {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(150px, 1fr));
+
+  gap: 15px;
+
+  margin-top: 20px;
 }
 
-.thumbnails img{
-    width:130px;
-    height:85px;
-    border-radius:12px;
-    object-fit:cover;
-    cursor:pointer;
-    border:3px solid transparent;
-    transition:.3s;
+.thumbnails img {
+  width: 100%;
+
+  height: 120px;
+
+  object-fit: cover;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  border: 3px solid transparent;
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    opacity 0.25s ease;
 }
 
-.thumbnails img:hover{
-    transform:scale(1.06);
+.thumbnails img:hover {
+  transform: scale(1.03);
+
+  opacity: 0.9;
 }
 
-.thumbnails img.active{
-    border-color:#006ce4;
+.thumbnails img.active {
+  border-color: #2563eb;
+
+  box-shadow:
+    0 4px 12px
+    rgba(37, 99, 235, 0.25);
 }
 
-/* =====================================
-   SECTION BOX
-===================================== */
+/* =====================================================
+   PRESENTATION
+===================================================== */
 
 .presentation,
 .equipements,
-.avis{
+.avis {
+  margin-top: 20px;
 
-    margin-top:25px;
+  padding: 25px;
 
-    background:white;
+  background: #f9fafb;
 
-    padding:30px;
+  border-radius: 14px;
 
-    border-radius:18px;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-
+  border: 1px solid #e5e7eb;
 }
 
 .presentation h2,
 .equipements h2,
-.avis h2{
+.avis h2 {
+  margin-top: 0;
 
-    color:#1d3557;
-    margin-bottom:20px;
+  margin-bottom: 15px;
 
+  color: #111827;
+
+  font-size: 22px;
 }
 
-.presentation p{
+.presentation p {
+  margin: 0;
 
-    color:#555;
-    line-height:1.9;
-    font-size:17px;
+  color: #4b5563;
 
+  font-size: 16px;
+
+  line-height: 1.8;
 }
 
-/* =====================================
+/* =====================================================
    EQUIPEMENTS
-===================================== */
+===================================================== */
 
-.equipements ul{
+.equipements ul {
+  list-style: none;
 
-    list-style:none;
-    padding:0;
-    margin:0;
+  padding: 0;
 
+  margin: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
 }
 
-.equipements li{
+.equipements li {
+  background: #ffffff;
 
-    margin:15px 0;
-    padding:14px 18px;
+  padding: 13px 15px;
 
-    border-radius:12px;
+  border-radius: 10px;
 
-    background:#f5fbff;
+  color: #374151;
 
-    color:#1d3557;
+  border: 1px solid #e5e7eb;
 
-    font-size:16px;
-
-    transition:.3s;
-
+  font-size: 15px;
 }
 
-.equipements li:hover{
-
-    background:#e3f2ff;
-
-    transform:translateX(8px);
-
-}
-
-/* =====================================
+/* =====================================================
    AVIS
-===================================== */
+===================================================== */
 
-.review{
+.review {
+  background: #ffffff;
 
-    margin-bottom:18px;
+  border: 1px solid #e5e7eb;
 
-    padding:20px;
+  border-radius: 12px;
 
-    border-radius:15px;
+  padding: 18px;
 
-    background:linear-gradient(135deg,#ffffff,#f6fbff);
+  margin-bottom: 12px;
+}
 
-    border-left:6px solid #00a86b;
+.review:last-child {
+  margin-bottom: 0;
+}
 
-    box-shadow:0 6px 18px rgba(0,0,0,.08);
+.review strong {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #111827;
+
+  font-size: 15px;
+}
+
+.review p {
+  margin: 0;
+
+  color: #6b7280;
+
+  line-height: 1.6;
+}
+
+/* =====================================================
+   CONTACT
+===================================================== */
+
+.contact-box {
+  margin-top: 35px;
+
+  padding: 25px;
+
+  background: #f8fafc;
+
+  border-radius: 16px;
+
+  border: 1px solid #e2e8f0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.contact-box h2 {
+  margin: 0 0 8px;
+
+  font-size: 22px;
+
+  color: #111827;
+}
+
+/* =====================================================
+   CONTACTS CLIQUABLES
+===================================================== */
+
+.contact-link {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  width: fit-content;
+
+  padding: 8px 10px;
+
+  border-radius: 8px;
+
+  text-decoration: none;
+
+  color: #2563eb;
+
+  font-size: 15px;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+a.contact-link:hover {
+  background: #dbeafe;
+
+  color: #1d4ed8;
+
+  transform: translateX(3px);
+}
+
+/* Adresse et horaires */
+
+div.contact-link {
+  color: #4b5563;
+
+  cursor: default;
+}
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.availability-page
+  .availability-card
+  > p {
+  padding: 40px;
+
+  text-align: center;
+
+  color: #6b7280;
+
+  font-size: 17px;
+}
+
+/* =====================================================
+   ERREURS
+===================================================== */
+
+.error-message {
+  margin: 15px 0;
+
+  padding: 14px 18px;
+
+  border-radius: 10px;
+
+  background: #fee2e2;
+
+  color: #b91c1c;
+
+  border: 1px solid #fecaca;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+/* =====================================================
+   RESPONSIVE TABLETTE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .availability-page {
+    padding: 25px 15px 50px;
+  }
+
+  .carousel {
+    height: 380px;
+  }
+
+  .availability-content {
+    padding: 25px;
+  }
+
+  .availability-title {
+    font-size: 28px;
+  }
+
+  .equipements ul {
+    grid-template-columns: 1fr;
+  }
 
 }
 
-.review strong{
+/* =====================================================
+   RESPONSIVE MOBILE
+===================================================== */
 
-    color:#163b65;
-    font-size:17px;
+@media (max-width: 600px) {
+
+  .availability-page {
+    padding: 15px 10px 40px;
+  }
+
+  .availability-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .availability-header h1 {
+    font-size: 24px;
+  }
+
+  .back-btn {
+    padding: 9px 14px;
+
+    font-size: 14px;
+  }
+
+  .availability-card {
+    border-radius: 14px;
+  }
+
+  .carousel {
+    height: 250px;
+  }
+
+  .carousel-btn {
+    width: 38px;
+    height: 38px;
+
+    font-size: 18px;
+  }
+
+  .carousel-btn.left {
+    left: 10px;
+  }
+
+  .carousel-btn.right {
+    right: 10px;
+  }
+
+  .availability-content {
+    padding: 20px 15px;
+  }
+
+  .availability-title {
+    font-size: 25px;
+  }
+
+  .availability-price {
+    font-size: 16px;
+
+    padding: 10px 14px;
+  }
+
+  .reservation-cta {
+    padding: 20px 15px;
+  }
+
+  .reservation-main-btn {
+    width: 100%;
+
+    font-size: 16px;
+
+    padding: 14px 20px;
+  }
+
+  .tabs {
+    gap: 7px;
+  }
+
+  .tab-btn {
+    flex: 1;
+
+    min-width: 45%;
+
+    padding: 10px 8px;
+
+    font-size: 13px;
+  }
+
+  .thumbnails {
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 10px;
+  }
+
+  .thumbnails img {
+    height: 100px;
+  }
+
+  .presentation,
+  .equipements,
+  .avis,
+  .contact-box {
+    padding: 18px;
+  }
+
+  .presentation h2,
+  .equipements h2,
+  .avis h2,
+  .contact-box h2 {
+    font-size: 19px;
+  }
+
+  .contact-link {
+    font-size: 14px;
+
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+  }
 
 }
 
-.review p{
+/* =====================================================
+   PETIT MOBILE
+===================================================== */
 
-    margin-top:10px;
+@media (max-width: 380px) {
 
-    color:#666;
-    line-height:1.7;
+  .availability-title {
+    font-size: 22px;
+  }
 
-}
+  .carousel {
+    height: 220px;
+  }
 
-/* =====================================
-   SCROLLBAR
-===================================== */
+  .tab-btn {
+    min-width: 100%;
+  }
 
-.thumbnails::-webkit-scrollbar{
-    height:8px;
-}
-
-.thumbnails::-webkit-scrollbar-thumb{
-    background:#00a86b;
-    border-radius:20px;
-}
-
-/* =====================================
-   RESPONSIVE
-===================================== */
-
-@media(max-width:768px){
-
-    .carousel img{
-        height:260px;
-    }
-
-    .availability-title{
-        font-size:28px;
-    }
-
-    .availability-content{
-        padding:22px;
-    }
-
-    .tabs{
-        justify-content:center;
-    }
-
-    .tab-btn{
-        width:100%;
-    }
+  .thumbnails {
+    grid-template-columns: 1fr;
+  }
 
 }
 
