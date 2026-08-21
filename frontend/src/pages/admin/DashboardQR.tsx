@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "./DashboardQR.css";
+
 /* =====================================================
    TYPE VERIFICATION RESULT
 ===================================================== */
@@ -9,35 +10,50 @@ type VerificationResult = {
   success?: boolean;
   message?: string;
 
-  data?: {
-    booking?: {
-      _id?: string;
-      user?: {
-        name?: string;
-        email?: string;
-      };
-      service?: {
-        name?: string;
-      };
-      date?: string;
-      status?: string;
+  booking?: {
+    _id?: string;
+
+    user?: {
+      username?: string;
+      email?: string;
     };
 
-    payment?: {
-      status?: string;
+    service?: {
+      name?: string;
     };
+
+    serviceType?: string;
+
+    persons?: number;
+
+    checkIn?: string;
+    checkOut?: string;
+
+    totalPrice?: number;
+
+    paymentStatus?: string;
+
+    status?: string;
+
+    qrVerifiedAt?: string;
   };
 };
 
+/* =====================================================
+   TYPE QR DATA
+===================================================== */
+
+type QRData = {
+  bookingId: string;
+  token: string;
+};
 
 /* =====================================================
    DASHBOARD QR
 ===================================================== */
 
 export default function DashboardQR() {
-
-  const [scannedCode, setScannedCode] =
-    useState<string>("");
+  const [scannedCode, setScannedCode] = useState<string>("");
 
   const [verificationResult, setVerificationResult] =
     useState<VerificationResult | null>(null);
@@ -48,15 +64,12 @@ export default function DashboardQR() {
   const [error, setError] =
     useState<string>("");
 
-
   /* =====================================================
      VERIFY QR CODE
   ===================================================== */
 
   const verifyQRCode = async () => {
-
     if (!scannedCode.trim()) {
-
       setError(
         "Veuillez saisir ou scanner un QR Code."
       );
@@ -65,24 +78,18 @@ export default function DashboardQR() {
     }
 
     try {
-
       setLoading(true);
-
       setError("");
-
       setVerificationResult(null);
 
-
       /* ================================================
-         TOKEN
+         TOKEN ADMIN
       ================================================= */
 
       const token =
         localStorage.getItem("token");
 
-
       if (!token) {
-
         setError(
           "Token manquant. Veuillez vous connecter."
         );
@@ -90,81 +97,135 @@ export default function DashboardQR() {
         return;
       }
 
+      /* ================================================
+         LIRE LE CONTENU DU QR
+      ================================================= */
+
+      let qrData: QRData;
+
+      try {
+        qrData = JSON.parse(
+          scannedCode.trim()
+        );
+      } catch {
+        setError(
+          "QR Code invalide. Le contenu du QR est incorrect."
+        );
+
+        return;
+      }
 
       /* ================================================
-         VERIFY QR
+         VÉRIFIER LES DONNÉES
+      ================================================= */
+
+      if (
+        !qrData.bookingId ||
+        !qrData.token
+      ) {
+        setError(
+          "QR Code incomplet : bookingId ou token manquant."
+        );
+
+        return;
+      }
+
+      console.log(
+        "📱 QR DATA :",
+        qrData
+      );
+
+      /* ================================================
+         API VERIFY QR
       ================================================= */
 
       const response =
         await axios.post<VerificationResult>(
           "http://localhost:5000/api/qr/verify",
+
           {
-            qrCode: scannedCode.trim()
+            bookingId:
+              qrData.bookingId,
+
+            token:
+              qrData.token,
           },
+
           {
             headers: {
               Authorization:
-                `Bearer ${token}`
-            }
+                `Bearer ${token}`,
+            },
           }
         );
-
 
       console.log(
         "✅ QR vérifié :",
         response.data
       );
 
+      /* ================================================
+         RESULTAT
+      ================================================= */
 
       setVerificationResult(
         response.data
       );
 
-
     } catch (error: any) {
-
       console.error(
         "❌ Erreur vérification QR :",
         error.response?.data ||
-        error.message
+          error.message
       );
-
 
       setError(
         error.response?.data?.message ||
-        "QR Code invalide ou impossible à vérifier."
+          "QR Code invalide ou impossible à vérifier."
       );
 
-
     } finally {
-
       setLoading(false);
-
     }
   };
-
 
   /* =====================================================
      RESET
   ===================================================== */
 
   const resetVerification = () => {
-
     setScannedCode("");
-
     setVerificationResult(null);
-
     setError("");
-
   };
 
+  /* =====================================================
+     FORMAT DATE
+  ===================================================== */
+
+  const formatDate = (
+    date?: string
+  ) => {
+    if (!date) {
+      return "Non renseignée";
+    }
+
+    try {
+      return new Date(
+        date
+      ).toLocaleDateString(
+        "fr-FR"
+      );
+    } catch {
+      return "Non renseignée";
+    }
+  };
 
   /* =====================================================
      RETURN
   ===================================================== */
 
   return (
-
     <div className="dashboard-qr">
 
       {/* =================================================
@@ -176,18 +237,17 @@ export default function DashboardQR() {
         <div>
 
           <h1>
-            📱 Gestion QR Codes
+            ✨ Gestion QR Codes
           </h1>
 
           <p>
             Vérifiez rapidement une réservation
-            à partir de son QR Code.
+            à partir du QR Code du client.
           </p>
 
         </div>
 
       </div>
-
 
       {/* =================================================
           VERIFY CARD
@@ -200,10 +260,13 @@ export default function DashboardQR() {
         </h2>
 
         <p>
-          Saisissez le code du QR Code
-          ou utilisez votre scanner.
+          Scannez le QR Code du client ou
+          collez son contenu ci-dessous.
         </p>
 
+        {/* =================================================
+            INPUT
+        ================================================= */}
 
         <div className="qr-input-group">
 
@@ -211,19 +274,20 @@ export default function DashboardQR() {
             QR Code
           </label>
 
-          <input
-            type="text"
+          <textarea
             value={scannedCode}
             onChange={(event) =>
               setScannedCode(
                 event.target.value
               )
             }
-            placeholder="Exemple : QR-BOOKING-8F72A91C"
+            placeholder={`Collez le contenu du QR Code ici...
+Exemple :
+{"bookingId":"6a68e903...","token":"0bc77de5-3652-4eb1-b392-6907eff008dc"}`}
+            rows={4}
           />
 
         </div>
-
 
         {/* =================================================
             ACTIONS
@@ -233,7 +297,9 @@ export default function DashboardQR() {
 
           <button
             type="button"
-            onClick={verifyQRCode}
+            onClick={
+              verifyQRCode
+            }
             disabled={loading}
             className="verify-qr-btn"
           >
@@ -244,17 +310,19 @@ export default function DashboardQR() {
 
           </button>
 
-
           <button
             type="button"
-            onClick={resetVerification}
+            onClick={
+              resetVerification
+            }
             className="reset-qr-btn"
           >
+
             🔄 Réinitialiser
+
           </button>
 
         </div>
-
 
         {/* =================================================
             ERROR
@@ -272,7 +340,6 @@ export default function DashboardQR() {
 
       </div>
 
-
       {/* =================================================
           RESULT
       ================================================= */}
@@ -281,16 +348,25 @@ export default function DashboardQR() {
 
         <div className="qr-result-card">
 
+          {/* =================================================
+              RESULT HEADER
+          ================================================= */}
+
           <div className="qr-result-header">
 
             <h2>
+
               {verificationResult.success
                 ? "✅ QR Code valide"
                 : "⚠️ Vérification"}
+
             </h2>
 
           </div>
 
+          {/* =================================================
+              MESSAGE
+          ================================================= */}
 
           {verificationResult.message && (
 
@@ -302,21 +378,21 @@ export default function DashboardQR() {
 
           )}
 
-
           {/* =================================================
               BOOKING
           ================================================= */}
 
-          {verificationResult.data?.booking && (
+          {verificationResult.booking && (
 
             <div className="qr-booking-info">
 
               <h3>
-                📋 Réservation
+                📋 Informations réservation
               </h3>
 
-
               <div className="qr-info-grid">
+
+                {/* CLIENT */}
 
                 <div>
 
@@ -325,18 +401,18 @@ export default function DashboardQR() {
                   </strong>
 
                   <span>
-                    {
-                      verificationResult
-                        .data
-                        .booking
-                        .user
-                        ?.name ||
-                      "Non renseigné"
-                    }
+
+                    {verificationResult
+                      .booking
+                      .user
+                      ?.username ||
+                      "Non renseigné"}
+
                   </span>
 
                 </div>
 
+                {/* EMAIL */}
 
                 <div>
 
@@ -345,18 +421,18 @@ export default function DashboardQR() {
                   </strong>
 
                   <span>
-                    {
-                      verificationResult
-                        .data
-                        .booking
-                        .user
-                        ?.email ||
-                      "Non renseigné"
-                    }
+
+                    {verificationResult
+                      .booking
+                      .user
+                      ?.email ||
+                      "Non renseigné"}
+
                   </span>
 
                 </div>
 
+                {/* SERVICE */}
 
                 <div>
 
@@ -365,37 +441,117 @@ export default function DashboardQR() {
                   </strong>
 
                   <span>
-                    {
-                      verificationResult
-                        .data
-                        .booking
-                        .service
-                        ?.name ||
-                      "Non renseigné"
-                    }
+
+                    {verificationResult
+                      .booking
+                      .service
+                      ?.name ||
+                      "Non renseigné"}
+
                   </span>
 
                 </div>
 
+                {/* TYPE */}
 
                 <div>
 
                   <strong>
-                    📅 Date
+                    🗂️ Type
                   </strong>
 
                   <span>
-                    {
-                      verificationResult
-                        .data
-                        .booking
-                        .date ||
-                      "Non renseignée"
-                    }
+
+                    {verificationResult
+                      .booking
+                      .serviceType ||
+                      "Non renseigné"}
+
                   </span>
 
                 </div>
 
+                {/* PERSONNES */}
+
+                <div>
+
+                  <strong>
+                    👥 Personnes
+                  </strong>
+
+                  <span>
+
+                    {verificationResult
+                      .booking
+                      .persons ||
+                      1}
+
+                  </span>
+
+                </div>
+
+                {/* CHECK-IN */}
+
+                <div>
+
+                  <strong>
+                    📅 Check-in
+                  </strong>
+
+                  <span>
+
+                    {formatDate(
+                      verificationResult
+                        .booking
+                        .checkIn
+                    )}
+
+                  </span>
+
+                </div>
+
+                {/* CHECK-OUT */}
+
+                <div>
+
+                  <strong>
+                    📅 Check-out
+                  </strong>
+
+                  <span>
+
+                    {formatDate(
+                      verificationResult
+                        .booking
+                        .checkOut
+                    )}
+
+                  </span>
+
+                </div>
+
+                {/* PRIX */}
+
+                <div>
+
+                  <strong>
+                    💰 Prix
+                  </strong>
+
+                  <span>
+
+                    {verificationResult
+                      .booking
+                      .totalPrice !==
+                    undefined
+                      ? `${verificationResult.booking.totalPrice} €`
+                      : "Non renseigné"}
+
+                  </span>
+
+                </div>
+
+                {/* STATUT */}
 
                 <div>
 
@@ -404,13 +560,12 @@ export default function DashboardQR() {
                   </strong>
 
                   <span>
-                    {
-                      verificationResult
-                        .data
-                        .booking
-                        .status ||
-                      "Non renseigné"
-                    }
+
+                    {verificationResult
+                      .booking
+                      .status ||
+                      "Non renseigné"}
+
                   </span>
 
                 </div>
@@ -421,12 +576,11 @@ export default function DashboardQR() {
 
           )}
 
-
           {/* =================================================
               PAYMENT
           ================================================= */}
 
-          {verificationResult.data?.payment && (
+          {verificationResult.booking && (
 
             <div className="qr-payment-info">
 
@@ -438,13 +592,11 @@ export default function DashboardQR() {
                 Statut :
               </strong>{" "}
 
-              {
-                verificationResult
-                  .data
-                  .payment
-                  .status ||
-                "Non renseigné"
-              }
+              {verificationResult
+                .booking
+                .paymentStatus === "paid"
+                ? "✅ Payé"
+                : "❌ Non payé"}
 
             </div>
 

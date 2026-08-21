@@ -123,6 +123,12 @@ const bookingSchema = new mongoose.Schema(
     qrToken: {
       type: String,
       default: null,
+      unique: true,
+    },
+
+    qrVerifiedAt: {
+      type: Date,
+      default: null,
     },
   },
 
